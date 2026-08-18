@@ -5,7 +5,7 @@
   "description": "A guided local bridge between ChatGPT and your code projects.",
   "scripts": {
     "start": "node server.mjs",
-    "check": "node --check server.mjs && node --check core.mjs && node --check actions.mjs && node --check action-auth.mjs && node --check transport.mjs && node --check public/app.js",
+    "check": "node --check server.mjs && node --check core.mjs && node --check actions.mjs && node --check action-auth.mjs && node --check transport.mjs && node --check auth.mjs && node --check approvals.mjs && node --check executor.mjs && node --check mcp.mjs",
     "test": "node test.mjs && node action-test.mjs && node reset-test.mjs && node security-regression-test.mjs",
     "test:e2e": "node e2e.mjs",
     "build:ui": "cd ui && npm run build",
