@@ -8,6 +8,11 @@ The model is your existing ChatGPT plan. CodeBridge never asks for an OpenAI API
 
 <img src="docs/screenshot.png" alt="CodeBridge after setup: the Ready screen, with example prompts and what ChatGPT is allowed to do" width="820">
 
+### [⬇ Download CodeBridge for macOS](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.1/CodeBridge-0.2.0-beta.1.dmg)
+
+`v0.2.0-beta.1` · 90.5 MB · universal (Apple Silicon + Intel) · macOS 14 or newer
+
+macOS blocks the first launch because the app is not registered with Apple. Clearing it takes one click — see [Install](#install).
 
 > **Beta.** The app, the Custom GPT Action bridge, the workspace policy and the execution chain are implemented, tested, and verified end to end against a real custom GPT. See [Status and limitations](#status-and-limitations) before relying on it.
 
@@ -36,8 +41,8 @@ You do **not** need Node.js, Homebrew, Xcode, an ngrok CLI, or Terminal. The app
 
 ## Install
 
-1. Download the DMG from [Releases](../../releases).
-2. Open it and drag **CodeBridge.app** to Applications.
+1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.1/CodeBridge-0.2.0-beta.1.dmg) and open it.
+2. Drag **CodeBridge.app** to Applications.
 3. Open CodeBridge from Applications.
 
 CodeBridge is a standalone app and is not registered with Apple, so macOS blocks the first launch. This is expected and is a one-time step:
