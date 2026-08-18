@@ -1,0 +1,24 @@
+{
+  "name": "codebridge",
+  "version": "0.2.0-beta.1",
+  "private": true,
+  "description": "A guided local bridge between ChatGPT and your code projects.",
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check core.mjs && node --check actions.mjs && node --check action-auth.mjs && node --check transport.mjs && node --check public/app.js",
+    "test": "node test.mjs && node action-test.mjs",
+    "test:e2e": "node e2e.mjs",
+    "build:ui": "cd ui && npm run build",
+    "release:check": "node release-check.mjs",
+    "privacy:check": "node privacy-check.mjs",
+    "doctor": "node doctor.mjs",
+    "cutover:check": "node cutover-check.mjs",
+    "public-beta:check": "node public-beta-check.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@ngrok/ngrok": "1.5.2"
+  }
+}

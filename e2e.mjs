@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+import {addRoot,readText,writeText,runStructuredCommand} from './core.mjs';
+const exec=promisify(execFile),tmp=await fs.mkdtemp(path.join(os.tmpdir(),'codebridge-e2e-'));
+await exec('git',['init'],{cwd:tmp});await fs.writeFile(path.join(tmp,'hello.txt'),'before\n');await addRoot(tmp);
+assert.equal((await readText(path.join(tmp,'hello.txt'))).trim(),'before');await writeText(path.join(tmp,'hello.txt'),'after\n');assert.equal((await readText(path.join(tmp,'hello.txt'))).trim(),'after');
+const r=await runStructuredCommand(tmp,'git',['status','--short']);assert.equal(r.ok,true);assert.equal(r.helper,'native');assert.match(r.stdout,/hello.txt/);
+await assert.rejects(()=>runStructuredCommand(tmp,'sudo',['ls']),/blocked by CodeBridge/);
+console.log('CodeBridge E2E workspace + native helper passed:',tmp);

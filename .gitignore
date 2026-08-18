@@ -1,0 +1,10 @@
+.DS_Store
+.codebridge/
+dist/
+native/.build/
+native-helper/.build/
+node_modules/
+.runtime-cache/
+*.log
+.env
+.env.*

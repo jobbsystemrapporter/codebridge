@@ -1,0 +1,7 @@
+import fs from'node:fs/promises';import{execFile}from'node:child_process';import{promisify}from'node:util';const exec=promisify(execFile),checks=[];async function c(name,fn,external=false){try{checks.push({name,ok:true,external,detail:await fn()})}catch(e){checks.push({name,ok:false,external,detail:e.message})}}
+await c('Release gate',async()=>{const r=await exec('./release.sh',[],{timeout:300000,maxBuffer:4e6});if(!r.stdout.includes('CodeBridge release gate PASS'))throw Error('release gate did not pass');return 'PASS'});
+await c('Git repository',async()=>{await exec('git',['rev-parse','--is-inside-work-tree']);return 'initialized'});
+await c('No private markers',async()=>{await exec(process.execPath,['privacy-check.mjs']);return 'PASS'});
+await c('Real Custom GPT Action E2E',async()=>{if(process.env.CODEBRIDGE_CHATGPT_E2E!=='PASS')throw Error('not yet attested through public HTTPS');return 'attested'},true);
+await c('Apple notarization',async()=>{await exec('xcrun',['stapler','validate','dist/CodeBridge-0.2.0-beta.1.dmg']);return 'stapled'},true);
+for(const x of checks)console.log(`${x.ok?'✓':'○'} ${x.name} — ${x.detail}`);const local=checks.filter(x=>!x.external&&!x.ok),external=checks.filter(x=>x.external&&!x.ok);console.log(`\nPublic source beta: ${local.length?'BLOCKED':'READY'}`);console.log(`Downloadable signed beta: ${!local.length&&!external.length?'READY':'BLOCKED'}`);if(external.length)console.log('External gates: '+external.map(x=>x.name).join(', '));if(local.length)process.exitCode=1;

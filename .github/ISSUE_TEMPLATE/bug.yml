@@ -1,0 +1,27 @@
+name: Bug report
+description: Report a reproducible CodeBridge problem
+body:
+  - type: markdown
+    attributes:
+      value: "Do not paste credentials, private source code, audit logs, or connector secrets."
+  - type: input
+    id: version
+    attributes: {label: CodeBridge version}
+    validations: {required: true}
+  - type: input
+    id: macos
+    attributes: {label: macOS version}
+    validations: {required: true}
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [App startup, ChatGPT connection, Project access, File editing, Command execution, Approval, Worktree, Other]
+    validations: {required: true}
+  - type: textarea
+    id: reproduce
+    attributes: {label: Steps to reproduce}
+    validations: {required: true}
+  - type: textarea
+    id: expected
+    attributes: {label: Expected behavior}
