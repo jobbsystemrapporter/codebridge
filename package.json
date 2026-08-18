@@ -4,16 +4,17 @@
   "private": true,
   "description": "A guided local bridge between ChatGPT and your code projects.",
   "scripts": {
-    "start": "node server.mjs",
-    "check": "node --check server.mjs && node --check core.mjs && node --check actions.mjs && node --check action-auth.mjs && node --check transport.mjs && node --check auth.mjs && node --check approvals.mjs && node --check executor.mjs && node --check mcp.mjs",
-    "test": "node test.mjs && node action-test.mjs && node reset-test.mjs && node security-regression-test.mjs && node launchagent-test.mjs",
-    "test:e2e": "node e2e.mjs",
+    "start": "node src/server.mjs",
+    "check": "for f in src/*.mjs; do node --check $f || exit 1; done",
+    "test": "node test/test.mjs && node test/action-test.mjs && node test/reset-test.mjs && node test/security-regression-test.mjs && node test/launchagent-test.mjs",
+    "test:e2e": "node test/e2e.mjs",
     "build:ui": "cd ui && npm run build",
-    "release:check": "node release-check.mjs",
-    "privacy:check": "node privacy-check.mjs",
-    "doctor": "node doctor.mjs",
-    "cutover:check": "node cutover-check.mjs",
-    "public-beta:check": "node public-beta-check.mjs"
+    "release": "./scripts/release.sh",
+    "release:check": "node test/release-check.mjs",
+    "privacy:check": "node test/privacy-check.mjs",
+    "doctor": "node src/doctor.mjs",
+    "cutover:check": "node test/cutover-check.mjs",
+    "public-beta:check": "node test/public-beta-check.mjs"
   },
   "engines": {
     "node": ">=20"

@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
-import {classifyCommand,expand} from './core.mjs';
-import {handleMcp,tools} from './mcp.mjs';
-import {sandboxCapabilities,macProfile} from './sandbox.mjs';
-import {classifyExec,cleanEnv} from './executor.mjs';
-import {issueWorkspaceCapability,verifyWorkspaceCapability} from './capability.mjs';
-import {requestApproval,listApprovals,decideApproval,consumeDecision} from './approvals.mjs';
+import {classifyCommand,expand} from '../src/core.mjs';
+import {handleMcp,tools} from '../src/mcp.mjs';
+import {sandboxCapabilities,macProfile} from '../src/sandbox.mjs';
+import {classifyExec,cleanEnv} from '../src/executor.mjs';
+import {issueWorkspaceCapability,verifyWorkspaceCapability} from '../src/capability.mjs';
+import {requestApproval,listApprovals,decideApproval,consumeDecision} from '../src/approvals.mjs';
 assert.equal(classifyCommand('git status'),'safe');
 assert.equal(classifyCommand('npm test'),'safe');
 assert.equal(classifyCommand('rm -rf dist'),'destructive');

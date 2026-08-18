@@ -2,10 +2,10 @@
 set -e
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 case "${1:-start}" in
-  start) exec node "$ROOT/server.mjs" ;;
-  doctor) node "$ROOT/cli.mjs" doctor ;;
-  status) node "$ROOT/cli.mjs" status ;;
-  projects) node "$ROOT/cli.mjs" projects ;;
-  history) node "$ROOT/cli.mjs" history ;;
+  start) exec node "$ROOT/src/server.mjs" ;;
+  doctor) node "$ROOT/src/cli.mjs" doctor ;;
+  status) node "$ROOT/src/cli.mjs" status ;;
+  projects) node "$ROOT/src/cli.mjs" projects ;;
+  history) node "$ROOT/src/cli.mjs" history ;;
   *) echo "Usage: codebridge {start|doctor|status|projects|history}"; exit 2 ;;
 esac

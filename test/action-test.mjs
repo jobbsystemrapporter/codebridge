@@ -8,7 +8,7 @@ const tmp=await fs.mkdtemp(path.join(os.tmpdir(),'codebridge-action-'));
 const home=path.join(tmp,'state'),project=path.join(tmp,'project'),port=4397,pub=4398;
 await fs.mkdir(project);await fs.writeFile(path.join(project,'hello.txt'),'hello');
 const helper=process.env.CODEBRIDGE_HELPER||path.join(process.cwd(),'native-helper','.build','release','codebridge-helper');
-const child=spawn(process.execPath,['server.mjs'],{env:{...process.env,CODEBRIDGE_HOME:home,PORT:String(port),CODEBRIDGE_PUBLIC_PORT:String(pub),CODEBRIDGE_HELPER:helper},stdio:'ignore'});
+const child=spawn(process.execPath,['src/server.mjs'],{env:{...process.env,CODEBRIDGE_HOME:home,PORT:String(port),CODEBRIDGE_PUBLIC_PORT:String(pub),CODEBRIDGE_HELPER:helper},stdio:'ignore'});
 const base=`http://127.0.0.1:${port}`,pubBase=`http://127.0.0.1:${pub}`;
 try{
   await new Promise(r=>setTimeout(r,600));

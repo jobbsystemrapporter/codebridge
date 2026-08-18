@@ -10,7 +10,7 @@ import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 const exec = promisify(execFile);
 
-const root = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const helper = process.env.CODEBRIDGE_HELPER || path.join(root, 'native-helper', '.build', 'release', 'codebridge-helper');
 const template = await fsp.readFile(path.join(root, 'launchd', 'com.codebridge.app.plist'), 'utf8');
 const dst = path.join(os.homedir(), 'Library', 'LaunchAgents', 'com.codebridge.app.plist');
@@ -18,7 +18,7 @@ const dst = path.join(os.homedir(), 'Library', 'LaunchAgents', 'com.codebridge.a
 await fsp.mkdir(path.dirname(dst), { recursive: true });
 await fsp.writeFile(dst, template
   .replaceAll('__CODEBRIDGE_NODE__', process.execPath)
-  .replaceAll('__CODEBRIDGE_ROOT__', root)
+  .replaceAll('__CODEBRIDGE_ROOT__', path.join(root, 'src'))
   .replaceAll('__CODEBRIDGE_HOME__', os.homedir())
   .replaceAll('__CODEBRIDGE_HELPER__', helper));
 

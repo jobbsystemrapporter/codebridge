@@ -12,7 +12,7 @@ async function start(port){
   // and without this the suite deletes the real user's agent.
   const launchAgent=path.join(tmp,'com.codebridge.app.plist');
   await fs.writeFile(launchAgent,'<?xml version="1.0"?>\n');
-  const child=spawn(process.execPath,['server.mjs'],{env:{...process.env,CODEBRIDGE_HOME:home,CODEBRIDGE_LAUNCH_AGENT:launchAgent,PORT:String(port),CODEBRIDGE_PUBLIC_PORT:String(port+1)},stdio:'ignore'});
+  const child=spawn(process.execPath,['src/server.mjs'],{env:{...process.env,CODEBRIDGE_HOME:home,CODEBRIDGE_LAUNCH_AGENT:launchAgent,PORT:String(port),CODEBRIDGE_PUBLIC_PORT:String(port+1)},stdio:'ignore'});
   const base=`http://127.0.0.1:${port}`;
   const deadline=Date.now()+5000;
   let up=false;
@@ -55,7 +55,7 @@ try{
 
 // Transport secret store roundtrip (file fallback under CODEBRIDGE_HOME).
 process.env.CODEBRIDGE_HOME=await fs.mkdtemp(path.join(os.tmpdir(),'codebridge-store-'));
-const store=await import('./keychain.mjs');
+const store=await import('../src/keychain.mjs');
 assert.equal(await store.readKeychainSecret(),null);
 await store.writeKeychainSecret('ngrok-test-token');
 assert.equal(await store.readKeychainSecret(),'ngrok-test-token');

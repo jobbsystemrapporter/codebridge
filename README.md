@@ -121,12 +121,23 @@ Honest about where the beta stands:
 Requires macOS 14+, Node.js 20+ and Swift 6.
 
 ```sh
-cd ui && npm install && npm run build   # renderer → public/
+cd ui && npm install && npm run build   # renderer → src/public/
 npm test                                 # core, action bridge, security regressions
-./release.sh                             # full gate: build, test, package .app + DMG, verify
+./scripts/release.sh                     # full gate: build, test, package .app + DMG, verify
 ```
 
-`release.sh` builds universal binaries, runs the execution end-to-end test, packages the app and DMG, verifies signatures and checksums, and runs the privacy scan.
+`scripts/release.sh` builds universal binaries, runs the execution end-to-end test, packages the app and DMG, verifies signatures and checksums, and runs the privacy scan.
+
+### Layout
+
+```text
+src/        the modules the app runs, plus the built renderer in src/public/
+test/       test suites and release gates — never bundled into the app
+scripts/    build, packaging and launch-agent install scripts
+native/     the macOS app (SwiftUI shell + WKWebView)
+native-helper/  the execution helper that runs commands without a shell
+ui/         renderer source (Vite + React + Tailwind v4 + Radix)
+```
 
 Architecture and contribution rules live in [AGENTS.md](AGENTS.md), which is the binding contract for changes.
 

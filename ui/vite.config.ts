@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 
-// The renderer builds static assets into the repo's public/ folder, which the
+// The renderer builds static assets into the repo's src/public/ folder, which the
 // CodeBridge local server serves. The backend/API contract is untouched.
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -16,7 +16,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: path.resolve(root, "../public"),
+    outDir: path.resolve(root, "../src/public"),
     emptyOutDir: true,
   },
 });

@@ -1,7 +1,7 @@
 #!/bin/zsh
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/dist"
 APP="$OUT/CodeBridge.app"
 BIN="$ROOT/native/.build/release/CodeBridge"
@@ -54,9 +54,11 @@ echo "    node slices: $NODE_ARCHS"
 "$NODE_BIN" --version >/dev/null
 
 echo "==> Bundling CodeBridge Core"
-cp "$ROOT"/*.mjs "$CORE/"
+# Only the modules the app actually runs. Test and gate scripts stay out of the
+# bundle: users have no use for them and they widen the attack surface.
+cp "$ROOT"/src/*.mjs "$CORE/"
 cp "$ROOT/package.json" "$ROOT/package-lock.json" "$CORE/"
-cp -R "$ROOT/public" "$CORE/public"
+cp -R "$ROOT/src/public" "$CORE/public"
 cp "$ROOT/assets/CodeBridge.icns" "$APP/Contents/Resources/CodeBridge.icns"
 
 echo "==> Bundling ngrok SDK for both architectures"

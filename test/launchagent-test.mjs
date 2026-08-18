@@ -10,6 +10,7 @@ import { promisify } from 'node:util';
 const exec = promisify(execFile);
 
 const root = process.cwd();
+const codeRoot = path.join(root, 'src');
 const template = await fsp.readFile(path.join(root, 'launchd', 'com.codebridge.app.plist'), 'utf8');
 
 // A system Node must never be required: bundling Node is the reason users do not
@@ -22,7 +23,7 @@ assert.ok(!/<string>node<\/string>/.test(job_xml), 'the agent must use an absolu
 const helper = path.join(root, 'native-helper', '.build', 'release', 'codebridge-helper');
 const filled = template
   .replaceAll('__CODEBRIDGE_NODE__', process.execPath)
-  .replaceAll('__CODEBRIDGE_ROOT__', root)
+  .replaceAll('__CODEBRIDGE_ROOT__', codeRoot)
   .replaceAll('__CODEBRIDGE_HOME__', os.homedir())
   .replaceAll('__CODEBRIDGE_HELPER__', helper);
 
@@ -45,12 +46,12 @@ assert.deepEqual(job.KeepAlive, { SuccessfulExit: false }, 'KeepAlive must resta
 assert.equal(job.RunAtLoad, true, 'the bridge must come back after a restart without opening the app');
 assert.equal(job.ProgramArguments[0], process.execPath);
 assert.ok(path.isAbsolute(job.ProgramArguments[0]), 'node path must be absolute');
-assert.equal(job.ProgramArguments[1], path.join(root, 'server.mjs'));
+assert.equal(job.ProgramArguments[1], path.join(codeRoot, 'server.mjs'));
 assert.equal(job.EnvironmentVariables.CODEBRIDGE_HELPER, helper);
 assert.ok(job.EnvironmentVariables.PATH, 'a fixed PATH must be pinned for the service');
 
 // The server the agent points at has to exist, or the job would crash-loop.
-await fsp.access(path.join(root, 'server.mjs'));
+await fsp.access(path.join(codeRoot, 'server.mjs'));
 
 await fsp.rm(dir, { recursive: true, force: true });
 console.log('Launch agent job definition passed (absolute bundled node, KeepAlive, RunAtLoad, helper wired).');

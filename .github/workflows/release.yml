@@ -5,13 +5,13 @@ on:
   workflow_dispatch:
 jobs:
   verify:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
-      - run: chmod +x release.sh package-app.sh package-dmg.sh
-      - run: ./release.sh
+      - run: chmod +x scripts/release.sh scripts/package-app.sh scripts/package-dmg.sh
+      - run: ./scripts/release.sh
       - uses: actions/upload-artifact@v4
         with:
           name: unsigned-codebridge-beta

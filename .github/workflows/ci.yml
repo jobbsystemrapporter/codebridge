@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,13 +26,13 @@ jobs:
         env:
           CODEBRIDGE_HELPER: "${{ github.workspace }}/native-helper/.build/release/codebridge-helper"
         run: |
-          node --check server.mjs
+          node --check src/server.mjs
           npm test
-          node first-run-test.mjs
-          node access-mode-test.mjs
-          node security-regression-test.mjs
-          node launchagent-test.mjs
-          node parity-test.mjs
-          node compat-test.mjs
-          node repo-check.mjs
-          node privacy-check.mjs
+          node test/first-run-test.mjs
+          node test/access-mode-test.mjs
+          node test/security-regression-test.mjs
+          node test/launchagent-test.mjs
+          node test/parity-test.mjs
+          node test/compat-test.mjs
+          node test/repo-check.mjs
+          node test/privacy-check.mjs

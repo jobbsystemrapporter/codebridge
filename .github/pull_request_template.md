@@ -7,7 +7,7 @@
 - [ ] Policy changes include denial/tamper tests
 
 ## Verification
-- [ ] `node test.mjs`
-- [ ] `node compat-test.mjs`
-- [ ] `node connector-test.mjs`
-- [ ] `node privacy-check.mjs`
+- [ ] `node test/test.mjs`
+- [ ] `node test/compat-test.mjs`
+- [ ] `npm test`
+- [ ] `node test/privacy-check.mjs`

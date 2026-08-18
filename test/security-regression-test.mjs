@@ -16,9 +16,9 @@ process.env.CODEBRIDGE_HELPER=helper;
 
 await new Promise((res,rej)=>spawn('git',['init','-q'],{cwd:proj,stdio:'ignore'}).on('close',c=>c===0?res():rej(new Error('git init failed'))));
 
-const core=await import('./core.mjs');
-const {classifyExec}=await import('./executor.mjs');
-const {requestApproval,decideApproval,consumeDecision}=await import('./approvals.mjs');
+const core=await import('../src/core.mjs');
+const {classifyExec}=await import('../src/executor.mjs');
+const {requestApproval,decideApproval,consumeDecision}=await import('../src/approvals.mjs');
 await core.addRoot(proj);
 
 // --- 1. Executable allowlist must not be bypassable with a path ---------------
@@ -53,7 +53,7 @@ assert.equal(consumeDecision(q3.id,{cwd:proj,executable:'git',args:['log']}).sta
 // --- 3. /mcp and /api/session must be authenticated and Host-pinned -----------
 const port=4501+Math.floor(Math.random()*200),pub=port+1;
 const srvHome=await fsp.mkdtemp(path.join(os.tmpdir(),'cbsrv-'));
-const child=spawn(process.execPath,['server.mjs'],{env:{...process.env,CODEBRIDGE_HOME:srvHome,PORT:String(port),CODEBRIDGE_PUBLIC_PORT:String(pub),CODEBRIDGE_HELPER:helper},stdio:'ignore'});
+const child=spawn(process.execPath,['src/server.mjs'],{env:{...process.env,CODEBRIDGE_HOME:srvHome,PORT:String(port),CODEBRIDGE_PUBLIC_PORT:String(pub),CODEBRIDGE_HELPER:helper},stdio:'ignore'});
 const base=`http://127.0.0.1:${port}`;
 for(let i=0;i<80;i++){try{await fetch(`${base}/api/session`);break}catch{await new Promise(r=>setTimeout(r,100))}}
 try{
@@ -95,7 +95,7 @@ try{
 // reset-test drives /api/uninstall against a sandboxed CODEBRIDGE_HOME, but the
 // agent lives outside it: without an override the suite deleted the user's real
 // agent and booted out their running service.
-const core2=await import('./core.mjs');
+const core2=await import('../src/core.mjs');
 assert.ok(!core2.LAUNCH_AGENT.startsWith(path.join(os.homedir(),'Library','LaunchAgents')),
   'with CODEBRIDGE_LAUNCH_AGENT set, the real LaunchAgents path must not be used');
 const realAgent=path.join(os.homedir(),'Library','LaunchAgents','com.codebridge.app.plist');
