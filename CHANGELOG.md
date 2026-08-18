@@ -4,6 +4,7 @@
 
 - Redesigned renderer built on React 19, Radix UI, Tailwind CSS v4 and shadcn/ui-style components, adapted to the CodeBridge onboarding flow.
 - Public HTTPS surface now exposes only authenticated `/actions/*`; admin API, MCP and the UI stay on localhost.
+- In-app lifecycle controls: "Erase all data & start fresh" wipes all local CodeBridge state, and "Uninstall CodeBridge" wipes state, removes the launch agent and moves the app to the Trash. Project files are never touched.
 - Universal app and DMG: works on both Apple Silicon and Intel Macs.
 - Bundled official Node.js v22 runtime for both architectures; no Homebrew/Node dependency on the user's Mac.
 - Bundled ngrok native binaries for arm64 and x86_64 inside the app.

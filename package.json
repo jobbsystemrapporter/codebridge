@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.mjs",
     "check": "node --check server.mjs && node --check core.mjs && node --check actions.mjs && node --check action-auth.mjs && node --check transport.mjs && node --check public/app.js",
-    "test": "node test.mjs && node action-test.mjs",
+    "test": "node test.mjs && node action-test.mjs && node reset-test.mjs",
     "test:e2e": "node e2e.mjs",
     "build:ui": "cd ui && npm run build",
     "release:check": "node release-check.mjs",

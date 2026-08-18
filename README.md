@@ -30,6 +30,15 @@ CodeBridge is deny-by-default around project access. Selecting one project does 
 
 The normal structured-command path does not invoke a shell. A legacy/developer shell path exists for development compatibility and should remain disabled for ordinary users. Git worktrees provide workflow isolation, not OS-level confidentiality. See `SECURITY.md` for the exact boundary.
 
+## Removing CodeBridge
+
+In the app, open the "Start over" menu and choose either:
+
+- **Erase all data & start fresh** – deletes all local CodeBridge state (configuration, project list, secrets, logs, workspaces) and returns to first-run setup.
+- **Uninstall CodeBridge** – erases all state, removes the launch agent and moves `CodeBridge.app` to the Trash.
+
+Your project folders are never modified or deleted by either option.
+
 ## Architecture
 
 ```text

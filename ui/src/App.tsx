@@ -1,5 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Moon, RotateCcw, Sun } from "lucide-react";
+import { ChevronDown, Moon, RotateCcw, Sun } from "lucide-react";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,6 +32,7 @@ import {
   initSession,
   nativeAvailable,
   requestNativeApproval,
+  trashApp,
   type ApprovalItem,
   type Status,
 } from "@/lib/api";
@@ -40,6 +59,8 @@ export default function App() {
   const [step, setStep] = useState(0);
   const [fatal, setFatal] = useState("");
   const [pendingApproval, setPendingApproval] = useState<ApprovalItem | null>(null);
+  const [confirmAction, setConfirmAction] = useState<"erase" | "uninstall" | null>(null);
+  const [uninstalled, setUninstalled] = useState(false);
   const processingApproval = useRef(false);
   const { dark, toggle } = useTheme();
 
@@ -144,6 +165,29 @@ export default function App() {
     setStep(0);
   }
 
+  async function eraseAll() {
+    try {
+      await api("/api/reset", { method: "POST", body: JSON.stringify({ confirm: true }) });
+      toast.success("All CodeBridge data has been erased.");
+      await load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not erase CodeBridge data.");
+    }
+  }
+
+  async function uninstall() {
+    try {
+      await api("/api/uninstall", { method: "POST", body: JSON.stringify({ confirm: true }) });
+      if (nativeAvailable()) {
+        await trashApp();
+      } else {
+        setUninstalled(true);
+      }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not uninstall CodeBridge.");
+    }
+  }
+
   const connected = !!status?.config.chatgpt.connected;
   const eyebrow = step === 4 && connected ? "CODEBRIDGE · READY" : `SETUP · ${step + 1} OF 5`;
 
@@ -155,6 +199,26 @@ export default function App() {
 
   function back() {
     setStep((s) => Math.max(0, s - 1));
+  }
+
+  if (uninstalled) {
+    return (
+      <div className="flex h-full items-center justify-center p-8">
+        <div className="max-w-md rounded-2xl border bg-card p-8 text-center shadow-xl">
+          <div className="mx-auto grid size-12 place-items-center rounded-xl bg-destructive/10 text-destructive">
+            <RotateCcw className="size-6" />
+          </div>
+          <h1 className="mt-4 text-2xl font-semibold tracking-tight">
+            CodeBridge has been removed.
+          </h1>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            All local CodeBridge data (configuration, secrets, logs and workspaces) has been
+            erased. Your project files were never touched. Move CodeBridge.app to the Trash and
+            empty it to finish the removal.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -178,10 +242,30 @@ export default function App() {
             <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle dark mode">
               {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
             </Button>
-            <Button variant="ghost" size="sm" onClick={reset} className="text-muted-foreground">
-              <RotateCcw className="mr-1.5 size-3.5" />
-              Start over
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-muted-foreground">
+                  <RotateCcw className="mr-1.5 size-3.5" />
+                  Start over
+                  <ChevronDown className="ml-1 size-3.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuItem onSelect={() => void reset()}>
+                  Start over (keep projects)
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setConfirmAction("erase")}>
+                  Erase all data & start fresh
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive"
+                  onSelect={() => setConfirmAction("uninstall")}
+                >
+                  Uninstall CodeBridge…
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
 
@@ -243,6 +327,39 @@ export default function App() {
       </main>
 
       <Approvals item={pendingApproval} onDecide={decideApproval} />
+      <AlertDialog
+        open={confirmAction !== null}
+        onOpenChange={(open) => {
+          if (!open) setConfirmAction(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmAction === "erase" ? "Erase all CodeBridge data?" : "Uninstall CodeBridge?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmAction === "erase"
+                ? "This permanently deletes your configuration, project list, connection secrets, audit history and workspaces. Your project files are never touched."
+                : "This erases all CodeBridge data and moves CodeBridge.app to the Trash. Your project files are never touched. The app will quit."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                const action = confirmAction;
+                setConfirmAction(null);
+                if (action === "erase") void eraseAll();
+                if (action === "uninstall") void uninstall();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {confirmAction === "erase" ? "Erase everything" : "Uninstall"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <Toaster richColors position="top-right" />
     </div>
   );

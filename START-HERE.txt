@@ -92,6 +92,19 @@ Security
 - The secret in the app is private. Never paste an OpenAI API key instead.
 
 ------------------------------------------------------------------
+Removing CodeBridge completely
+------------------------------------------------------------------
+1. In the app, open the "Start over" menu (top right).
+2. Choose "Erase all data & start fresh" to wipe everything and begin the
+   setup again, or "Uninstall CodeBridge" to remove the app entirely.
+3. Confirm the dialog. Uninstall erases all local CodeBridge data
+   (configuration, secrets, logs, workspaces), removes the launch agent and
+   moves CodeBridge.app to the Trash.
+4. Empty the Trash to finish.
+
+Your project folders are never modified or deleted by either option.
+
+------------------------------------------------------------------
 Troubleshooting
 ------------------------------------------------------------------
 - The app does not start: open it from Applications, or right-click -> Open.

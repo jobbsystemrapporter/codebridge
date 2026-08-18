@@ -26,6 +26,18 @@ final class NativeBridge: NSObject, WKScriptMessageHandler {
             let alert = NSAlert(); alert.messageText = title; alert.informativeText = detail; alert.alertStyle = .warning
             alert.addButton(withTitle: "Allow once"); alert.addButton(withTitle: "Cancel")
             reply(["ok": alert.runModal() == .alertFirstButtonReturn])
+        case "trashApp":
+            let bundle = Bundle.main.bundleURL
+            guard bundle.pathExtension == "app" else {
+                reply(["ok": false, "error": "Not running as a bundled app."]); return
+            }
+            do {
+                try FileManager.default.trashItem(at: bundle, resultingItemURL: nil)
+                reply(["ok": true])
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { NSApp.terminate(nil) }
+            } catch {
+                reply(["ok": false, "error": error.localizedDescription])
+            }
         default: reply(["ok": false, "error": "Unknown native action"])
         }
     }

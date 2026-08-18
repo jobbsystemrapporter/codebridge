@@ -19,6 +19,16 @@ export async function init(){await fsp.mkdir(APP_DIR,{recursive:true,mode:0o700}
 export async function getConfig(){await init();const c=JSON.parse(await fsp.readFile(CONFIG,'utf8'));const roots=Array.isArray(c.allowedRoots)?c.allowedRoots:[];const cleaned=[];for(const root of roots){const base=path.basename(root);if((!process.env.CODEBRIDGE_HOME)&&(/^codebridge-(?:e2e|compat|cutover)-/i.test(base)||/^cb[xyz]-/i.test(base)))continue;try{const st=await fsp.stat(root);if(st.isDirectory())cleaned.push(root)}catch{}}const unique=[...new Set(cleaned)];if(unique.length!==roots.length){c.allowedRoots=unique;await saveConfig(c)}return c}
 export async function saveConfig(v){await fsp.mkdir(APP_DIR,{recursive:true,mode:0o700});await fsp.writeFile(CONFIG,JSON.stringify(v,null,2),{mode:0o600});return v}
 export async function patchConfig(p){const c=await getConfig();return saveConfig({...c,...p})}
+export async function resetAllData(){
+  const app=path.resolve(APP_DIR),home=path.resolve(os.homedir()),root=path.parse(app).root;
+  if(app===home||app===root)throw Object.assign(new Error('Refusing to wipe a broad path.'),{status:500});
+  await fsp.rm(app,{recursive:true,force:true});
+  await init();
+  return {ok:true};
+}
+export async function removeLaunchAgent(){
+  try{await fsp.rm(path.join(os.homedir(),'Library','LaunchAgents','com.codebridge.app.plist'),{force:true})}catch{}
+}
 export function expand(p){return path.resolve(p.replace(/^~(?=\/|$)/,os.homedir()))}
 function blocked(p){const abs=expand(p);return BLOCKED.some(x=>abs===path.join(os.homedir(),x)||abs.startsWith(path.join(os.homedir(),x)+path.sep))}
 async function canonicalExisting(p){return fsp.realpath(expand(p))}

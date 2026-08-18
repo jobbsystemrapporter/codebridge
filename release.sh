@@ -3,7 +3,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"; cd "$ROOT"
 TEST_HOME="$(mktemp -d "${TMPDIR:-/tmp}/codebridge-release.XXXXXX")"; trap 'rm -rf "$TEST_HOME"' EXIT; export CODEBRIDGE_HOME="$TEST_HOME/state"
 
-echo '[1/13] Syntax + unit/security (isolated state)'; node --check server.mjs; node --check mcp.mjs; node test.mjs
+echo '[1/13] Syntax + unit/security (isolated state)'; node --check server.mjs; node --check mcp.mjs; node test.mjs; node reset-test.mjs
 echo '[2/13] Access-mode safety'; node access-mode-test.mjs
 echo '[3/13] Clean first-run'; node first-run-test.mjs
 echo '[4/13] DevSpace replacement contract'; node parity-test.mjs

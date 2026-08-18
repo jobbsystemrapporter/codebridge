@@ -154,6 +154,11 @@ export async function requestNativeApproval(detail: string): Promise<boolean> {
   return !!r?.ok;
 }
 
+export async function trashApp(): Promise<boolean> {
+  const r = await nativeCall({ action: "trashApp" });
+  return !!r?.ok;
+}
+
 export async function copyText(text: string): Promise<void> {
   try {
     await navigator.clipboard.writeText(text);

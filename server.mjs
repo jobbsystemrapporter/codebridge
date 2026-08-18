@@ -2,11 +2,11 @@ import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { init,getConfig,patchConfig,addRoot,removeRoot,listWorkspace,readText,writeText,runCommand,gitInfo,doctor,history,systemStatus,audit } from './core.mjs';
+import { init,getConfig,patchConfig,addRoot,removeRoot,listWorkspace,readText,writeText,runCommand,gitInfo,doctor,history,systemStatus,audit,resetAllData,removeLaunchAgent } from './core.mjs';
 import { handleMcp } from './mcp.mjs';
 import { handleHttpMcp } from './mcp-http.mjs';
 import { createSafeWorkspace,reviewSafeWorkspace,discardSafeWorkspace,applySafeWorkspace } from './worktrees.mjs';
-import { transportStatus,startTransport } from './transport.mjs';
+import { transportStatus,startTransport,stopTransport } from './transport.mjs';
 import { localSecret,authorize } from './auth.mjs';
 import { listApprovals,decideApproval } from './approvals.mjs';
 import { getAccessMode,setAccessMode } from './capabilities.mjs';
@@ -49,6 +49,8 @@ async function api(req,res,url){try{
   if(req.method==='POST'&&url.pathname==='/api/worktree/discard'){const b=await body(req);return json(res,200,await discardSafeWorkspace(b.project,b.worktree))}
   if(req.method==='POST'&&url.pathname==='/api/worktree/apply'){const b=await body(req);return json(res,200,await applySafeWorkspace(b.project,b.worktree))}
   if(req.method==='POST'&&url.pathname==='/api/chatgpt/guide'){await audit('chatgpt.guide.opened');const cfg=await getConfig(),setup=await actionSetup(),transport=await transportStatus();const steps=[];if(!transport.running)steps.push({title:'Connect CodeBridge securely',action:'ngrok',url:'https://dashboard.ngrok.com/get-started/your-authtoken',detail:'Sign in to ngrok, copy your connection code, and paste it into CodeBridge. CodeBridge starts the secure address automatically.'});else if(!cfg.chatgpt?.connected)steps.push({title:'Add CodeBridge to your custom GPT',action:'custom-gpt',url:'https://chatgpt.com/gpts/editor',detail:'CodeBridge has prepared the instructions, Action schema, and private connection secret for you.'});else steps.push({title:'Connected',action:'connected',detail:'Your custom GPT has reached CodeBridge on this Mac.'});return json(res,200,{mode:'gpt-action',title:cfg.chatgpt?.connected?'Connected':'Next step',steps,automatic:false,setup})}
+  if(req.method==='POST'&&url.pathname==='/api/reset'){const b=await body(req);if(b.confirm!==true)throw Object.assign(new Error('Confirmation required.'),{status:400});await stopTransport();await resetAllData();await audit('app.reset_all');return json(res,200,{ok:true,reset:true})}
+  if(req.method==='POST'&&url.pathname==='/api/uninstall'){const b=await body(req);if(b.confirm!==true)throw Object.assign(new Error('Confirmation required.'),{status:400});await stopTransport();await resetAllData();await removeLaunchAgent();await audit('app.uninstall');setTimeout(()=>process.exit(0),400);return json(res,200,{ok:true,uninstall:true})}
   return json(res,404,{error:'Not found'});
 }catch(e){return json(res,e.status||500,{error:e.message})}}
 
