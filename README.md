@@ -85,3 +85,28 @@ The release gate builds the Swift helper and app, runs execution E2E, packages t
 Before the first downloadable public beta, maintainers must complete a real Custom GPT Action E2E test through the chosen public HTTPS transport and sign/notarize the application with an Apple Developer ID. No OpenAI API credential is part of the normal CodeBridge architecture.
 
 See `MIGRATION.md`, `SECURITY.md`, `SUPPORT.md`, `CONTRIBUTING.md`, and `CHANGELOG.md`.
+
+## Starta appen / How to run
+
+Already packaged (no installs needed):
+
+```sh
+open dist/CodeBridge.app
+```
+
+or double-click `CodeBridge.app` in the `dist/` folder. To distribute, give
+others the DMG (`dist/CodeBridge-0.2.0-beta.1.dmg`): they mount it, drag
+`CodeBridge.app` to Applications, and open it. Until the app is Developer ID
+signed and notarized, macOS may ask to right-click → Open once.
+
+Verify the local service is running:
+
+```sh
+curl http://127.0.0.1:4317/api/status
+```
+
+From source, after building the renderer and core:
+
+```sh
+npm start
+```
