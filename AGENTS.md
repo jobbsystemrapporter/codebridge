@@ -175,9 +175,11 @@ The public HTTPS endpoint must authenticate every privileged Action request. Nev
 
 The public product is a normal macOS app for non-developers. Users must not need Node.js, Swift, Homebrew, npm, or Terminal.
 
-For distribution outside the Mac App Store, release builds must use Apple Developer ID signing and Apple notarization. Staple notarization tickets to distributable artifacts where applicable. Ad-hoc signing is development-only and is not sufficient for public release.
+CodeBridge is distributed as a standalone app outside the Mac App Store, without an Apple Developer ID and without Apple notarization. Release builds are ad-hoc signed, and the universal binaries must remain valid under `codesign --verify`.
 
-Do not claim the downloadable public beta is ready until a clean Mac/user test passes through Gatekeeper with the actual signed/notarized artifact.
+The consequence is a one-time Gatekeeper block on first launch, which the user clears themselves (System Settings → Privacy & Security → Open Anyway on macOS 15+, right-click → Open on macOS 14). Onboarding docs must describe this accurately for current macOS: the right-click bypass alone was removed in macOS 15 and must not be given as the only instruction.
+
+Do not claim the downloadable public beta is ready until a clean Mac/user test passes with the actual artifact, including that first-launch approval.
 
 ## 10. External references allowed for facts, not architecture
 
@@ -193,8 +195,6 @@ Prefer first-party sources. Current reference set:
 - ngrok macOS setup/docs: https://ngrok.com/download/mac-os
 - ngrok Terms of Service: https://ngrok.com/tos
 - Apple macOS distribution: https://developer.apple.com/macos/distribution/
-- Apple Developer ID: https://developer.apple.com/support/developer-id/
-- Apple notarization workflow: https://developer.apple.com/documentation/security/customizing-the-notarization-workflow
 
 Do not adopt code or architecture merely because a GitHub project looks useful. First verify that it serves the canonical Devspace-derived architecture, has an acceptable license, reduces beginner setup, and does not introduce OpenAI API billing or another model provider.
 
@@ -223,7 +223,7 @@ Do not say “done”, “ready”, or “release ready” until all applicable 
 11. Existing Devspace remains untouched and functional.
 12. Privacy/repository scan finds no personal paths, tokens, logs, or generated secrets.
 13. All automated tests and release gates reflect the Custom GPT Action architecture.
-14. Public artifact is Developer ID signed, notarized, stapled, and tested on a clean user account/Mac.
+14. Public artifact is ad-hoc signed, opens on a clean user account/Mac after the documented one-time Gatekeeper approval.
 15. README/onboarding/support docs describe the same architecture as this file.
 
 ## 13. Required workflow for future agents

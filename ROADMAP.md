@@ -22,7 +22,7 @@
 4. Confirm transport automatically reconnects after CodeBridge/Mac restart.
 5. Remove all abandoned OpenAI Secure MCP Tunnel source/tests/docs.
 6. Run privacy scans on the packaged artifact and verify no developer state or credentials ship.
-7. Sign with Apple Developer ID, notarize, staple, and test the DMG on a clean macOS user/Mac.
+7. Test the DMG on a clean macOS user/Mac, including the one-time Gatekeeper approval for a standalone app.
 8. Publish only after the full release gate and real Custom GPT Action E2E pass.
 
 ## Product invariant

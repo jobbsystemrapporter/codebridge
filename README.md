@@ -4,7 +4,7 @@
 
 CodeBridge is a local macOS bridge between ChatGPT and folders you explicitly allow. It is designed for a simple flow: install CodeBridge, choose a project, connect ChatGPT, and work. Project files and local state remain on the user's Mac unless the user explicitly sends content through their ChatGPT workflow.
 
-> Beta: the local app, Custom GPT Action bridge, workspace policy and execution chain are implemented and tested. CodeBridge does not use an OpenAI API key for the model: the user's normal ChatGPT plan supplies the model. Public distribution still requires a stable per-installation HTTPS transport and Apple Developer ID notarization.
+> Beta: the local app, Custom GPT Action bridge, workspace policy and execution chain are implemented and tested. CodeBridge does not use an OpenAI API key for the model: the user's normal ChatGPT plan supplies the model. Public distribution still requires a stable per-installation HTTPS transport. CodeBridge ships as a standalone, ad-hoc signed app; it is not registered with Apple.
 
 ## Current beta
 
@@ -93,7 +93,9 @@ The release gate builds the Swift helper and app, runs execution E2E, packages t
 
 ## Public-release gates
 
-Before the first downloadable public beta, maintainers must complete a real Custom GPT Action E2E test through the chosen public HTTPS transport and sign/notarize the application with an Apple Developer ID. No OpenAI API credential is part of the normal CodeBridge architecture.
+Before the first downloadable public beta, maintainers must complete a real Custom GPT Action E2E test through the chosen public HTTPS transport. No OpenAI API credential is part of the normal CodeBridge architecture.
+
+CodeBridge is distributed as a standalone app without an Apple Developer ID, so Gatekeeper blocks it on first launch and the user approves it once under System Settings → Privacy & Security → Open Anyway (macOS 15+) or via right-click → Open (macOS 14). `START-HERE.txt` in the DMG walks through this.
 
 See `MIGRATION.md`, `SECURITY.md`, `SUPPORT.md`, `CONTRIBUTING.md`, and `CHANGELOG.md`.
 
@@ -107,8 +109,10 @@ open dist/CodeBridge.app
 
 or double-click `CodeBridge.app` in the `dist/` folder. To distribute, give
 others the DMG (`dist/CodeBridge-0.2.0-beta.1.dmg`): they mount it, drag
-`CodeBridge.app` to Applications, and open it. Until the app is Developer ID
-signed and notarized, macOS may ask to right-click → Open once.
+`CodeBridge.app` to Applications, and open it. Because the app is standalone
+and not registered with Apple, macOS blocks the first launch; the user allows
+it once under System Settings → Privacy & Security → Open Anyway (macOS 15+)
+or right-click → Open (macOS 14).
 The DMG also contains `START-HERE.txt` – a complete step-by-step guide from
 installation through ngrok, Custom GPT setup, connection test and usage.
 

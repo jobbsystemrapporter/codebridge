@@ -21,10 +21,20 @@ STEP 1 - Install the app
    there in the DMG window).
 3. Open CodeBridge from Applications or Launchpad.
 
-If macOS says "cannot verify the developer" or blocks the app:
-right-click CodeBridge.app -> Open -> Open.
-(This only applies until the app is signed and notarized; then the step
-disappears completely.)
+CodeBridge is a standalone app that is not registered with Apple, so macOS
+will warn you the first time you open it. This is expected, and it is a
+one-time step:
+
+  On macOS 15 and newer (including macOS 26):
+    1. Try to open CodeBridge. macOS refuses and shows a warning.
+    2. Open System Settings -> Privacy & Security.
+    3. Scroll down. Next to "CodeBridge.app was blocked", click "Open Anyway".
+    4. Confirm with Touch ID or your password.
+
+  On macOS 14:
+    Right-click CodeBridge.app -> Open -> Open.
+
+After this, CodeBridge opens normally every time.
 
 ------------------------------------------------------------------
 STEP 2 - Choose project folders
