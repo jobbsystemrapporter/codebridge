@@ -347,9 +347,16 @@ export function ConnectGuide({ onConnected }: Props) {
           <div className="flex items-center gap-2">
             <Check className="size-4 text-primary" /> Web search
           </div>
+          <div className="flex items-center gap-2">
+            <Check className="size-4 text-primary" /> Image generation
+          </div>
           <div className="flex items-center gap-2 rounded-md bg-primary/10 px-2 py-1.5 font-medium text-foreground">
             <Check className="size-4 text-primary" /> Code Interpreter &amp; Data Analysis
             <span className="ml-auto text-[11px] text-muted-foreground">← turn this on</span>
+          </div>
+          <div className="mt-3 font-medium text-foreground">Actions</div>
+          <div className="w-fit rounded-full border bg-secondary px-3 py-1.5 text-secondary-foreground">
+            Create new action
           </div>
         </Illustration>
         <Screenshot name="chatgpt-features.png" alt="Features with Code Interpreter enabled" />
