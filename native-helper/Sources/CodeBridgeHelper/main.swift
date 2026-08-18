@@ -22,6 +22,10 @@ guard input.count <= 256*1024,let req=try? JSONDecoder().decode(Request.self,fro
 guard verifyCapability(req.capability,req:req) else { emit(Response(ok:false,exitCode:77,stdout:"",stderr:"",error:"Workspace capability is invalid, expired, or does not match this command")) }
 let cwd=URL(fileURLWithPath:req.cwd).standardizedFileURL.path
 let exeName=URL(fileURLWithPath:req.executable).lastPathComponent
+// The executable must be a bare command name. A name carrying any path ("./git",
+// "/tmp/evil/git") passes a basename allowlist but makes /usr/bin/env execute that
+// path directly instead of resolving the trusted name against our fixed PATH.
+guard !req.executable.contains("/"),exeName==req.executable else { emit(Response(ok:false,exitCode:77,stdout:"",stderr:"",error:"Executable must be a bare command name; paths are not allowed")) }
 guard !blocked.contains(exeName),allowed.contains(exeName) else { emit(Response(ok:false,exitCode:77,stdout:"",stderr:"",error:"Executable is not allowed by helper policy")) }
 guard req.args.count<=128,req.args.allSatisfy({$0.utf8.count<=8192 && !$0.contains("\u{0000}")}) else { emit(Response(ok:false,exitCode:65,stdout:"",stderr:"",error:"Arguments exceed limits")) }
 var isDir:ObjCBool=false

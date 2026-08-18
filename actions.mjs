@@ -65,14 +65,14 @@ export async function handleAction(req,url,body){
   if(req.method==='POST'&&url.pathname==='/actions/open')return await openWorkspace({path:b.path,mode:b.mode||'checkout'});
   if(req.method==='POST'&&url.pathname==='/actions/command'){
     if(Array.isArray(b.args)&&b.executable){
-      if(b.approvalId){const d=consumeDecision(b.approvalId);if(!d)return {approvalPending:true,approvalId:b.approvalId};if(d.status!=='approved')return {denied:true,approvalId:b.approvalId};return await runStructuredCommand(b.cwd,b.executable,b.args,true)}
+      if(b.approvalId){const d=consumeDecision(b.approvalId,{cwd:b.cwd,executable:b.executable,args:b.args||[]});if(!d)return {approvalPending:true,approvalId:b.approvalId};if(d.status!=='approved')return {denied:true,approvalId:b.approvalId};return await runStructuredCommand(b.cwd,b.executable,b.args,true)}
       const r=await runStructuredCommand(b.cwd,b.executable,b.args||[],false);
-      if(r.approvalRequired){const q=requestApproval({type:'command',cwd:r.cwd,executable:r.executable,args:r.args||[],kind:r.kind});return {approvalRequired:true,approvalId:q.id,expiresAt:q.expiresAt,kind:r.kind}}
+      if(r.approvalRequired){const q=requestApproval({type:'command',cwd:r.cwd,executable:r.executable,args:r.args||[],kind:r.kind,req:{cwd:b.cwd,executable:b.executable,args:b.args||[]}});return {approvalRequired:true,approvalId:q.id,expiresAt:q.expiresAt,kind:r.kind}}
       return r;
     }
-    if(b.approvalId){const d=consumeDecision(b.approvalId);if(!d)return {approvalPending:true,approvalId:b.approvalId};if(d.status!=='approved')return {denied:true,approvalId:b.approvalId};return await runCommand(b.cwd,String(b.command||''),true)}
+    if(b.approvalId){const d=consumeDecision(b.approvalId,{cwd:b.cwd,command:String(b.command||'')});if(!d)return {approvalPending:true,approvalId:b.approvalId};if(d.status!=='approved')return {denied:true,approvalId:b.approvalId};return await runCommand(b.cwd,String(b.command||''),true)}
     const r=await runCommand(b.cwd,String(b.command||''),!!b.approved);
-    if(r.approvalRequired){const q=requestApproval({type:'command',cwd:r.cwd,command:r.command,kind:r.kind});return {...r,approvalId:q.id,expiresAt:q.expiresAt}}
+    if(r.approvalRequired){const q=requestApproval({type:'command',cwd:r.cwd,command:r.command,kind:r.kind,req:{cwd:b.cwd,command:String(b.command||'')}});return {...r,approvalId:q.id,expiresAt:q.expiresAt}}
     return r;
   }
   throw Object.assign(new Error('Not found'),{status:404});

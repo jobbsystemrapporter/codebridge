@@ -22,13 +22,13 @@ const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8'
 const json=(res,status,data)=>{res.writeHead(status,{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'});res.end(JSON.stringify(data))};
 const body=async req=>{let raw='';for await(const chunk of req){raw+=chunk;if(raw.length>2_000_000)throw Object.assign(new Error('Request too large'),{status:413})}return raw?JSON.parse(raw):{}};
 async function api(req,res,url){try{
+  if(!(await authorize(req,url)))return json(res,403,{error:'CodeBridge local authorization failed.'});
   if(url.pathname==='/api/session'&&req.method==='GET')return json(res,200,{token:await localSecret()});
-  if(url.pathname.startsWith('/api/')&&!(await authorize(req,url)))return json(res,403,{error:'CodeBridge local authorization failed.'});
   if(url.pathname==='/mcp')return handleHttpMcp(req,res,body)
   if(req.method==='GET'&&url.pathname==='/api/status')return json(res,200,await systemStatus());
   if(req.method==='GET'&&url.pathname==='/api/config')return json(res,200,{...(await getConfig()),accessMode:await getAccessMode()});
   if(req.method==='PUT'&&url.pathname==='/api/access-mode'){const b=await body(req);return json(res,200,await setAccessMode(b.accessMode))}
-  if(req.method==='PATCH'&&url.pathname==='/api/config'){const b=await body(req);return json(res,200,await patchConfig({securityMode:b.securityMode,setupComplete:!!b.setupComplete}))}
+  if(req.method==='PATCH'&&url.pathname==='/api/config'){const b=await body(req);if(!['safe','developer'].includes(b.securityMode))throw Object.assign(new Error('securityMode must be safe or developer.'),{status:400});return json(res,200,await patchConfig({securityMode:b.securityMode,setupComplete:!!b.setupComplete}))}
   if(req.method==='POST'&&url.pathname==='/api/workspaces'){const b=await body(req);return json(res,200,await addRoot(b.path))}
   if(req.method==='DELETE'&&url.pathname==='/api/workspaces'){const b=await body(req);return json(res,200,await removeRoot(b.path))}
   if(req.method==='GET'&&url.pathname==='/api/files')return json(res,200,await listWorkspace(url.searchParams.get('path')||''));

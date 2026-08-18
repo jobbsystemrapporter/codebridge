@@ -30,6 +30,7 @@ jobs:
           npm test
           node first-run-test.mjs
           node access-mode-test.mjs
+          node security-regression-test.mjs
           node parity-test.mjs
           node compat-test.mjs
           node repo-check.mjs

@@ -2,7 +2,9 @@
 
 ## Security model
 
-CodeBridge grants AI tools access only to folders explicitly selected by the user. Filesystem requests are canonicalized before authorization. Structured command execution uses a native helper, executable/argument policy, filtered environment and short-lived signed workspace capabilities. Capabilities are single-use. Commands outside the safe policy require an approval request; the desktop app presents an Allow once / Cancel decision.
+CodeBridge grants AI tools access only to folders explicitly selected by the user. Filesystem requests are canonicalized before authorization. Structured command execution uses a native helper, executable/argument policy, filtered environment and short-lived signed workspace capabilities. Executables must be bare command names; a name carrying a path is rejected by both CodeBridge Core and the native helper. Capabilities carry a single-use nonce, but the helper currently verifies signature, expiry and command binding only — replay within the capability's short TTL is not yet rejected. Commands outside the safe policy require an approval request; the desktop app presents an Allow once / Cancel decision, and an approval authorizes only the exact command the user was shown.
+
+The localhost control API pins the Host header to the loopback address it listens on, so DNS rebinding from a web page cannot reach it. The optional local MCP surface requires the same installation secret as the rest of the control API.
 
 The localhost control API uses a separate installation secret and origin checks. The public Custom GPT Action surface uses its own random per-install Bearer secret. The Action secret is a CodeBridge credential, not an OpenAI API key. Unauthenticated public Action requests are rejected.
 
