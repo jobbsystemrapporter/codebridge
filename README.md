@@ -50,7 +50,10 @@ CodeBridge is a standalone app and is not registered with Apple, so macOS blocks
 
 ## Set up
 
-The app walks you through it, one step at a time:
+**[→ Full step-by-step setup guide](docs/setup.md)** — every step with the exact
+values to copy, plus troubleshooting.
+
+The app walks you through the same steps, one at a time:
 
 1. **Choose project folders.** Only these become reachable. Sensitive locations (SSH keys, cloud credentials, Keychains, Mail) are refused even if something asks for them.
 2. **Connect securely.** Paste your ngrok connection code. CodeBridge starts the HTTPS address itself and stores the code in your Keychain.
@@ -146,6 +149,7 @@ Architecture and contribution rules live in [AGENTS.md](AGENTS.md), which is the
 
 ## Documentation
 
+- [docs/setup.md](docs/setup.md) — full setup guide, from download to first request
 - [SECURITY.md](SECURITY.md) — security model and reporting
 - [SUPPORT.md](SUPPORT.md) — getting help, filing bugs
 - [CONTRIBUTING.md](CONTRIBUTING.md) — contribution rules

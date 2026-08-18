@@ -64,24 +64,27 @@ Follow the in-app guide step by step. In short:
 
 1. Click "Open GPT editor" in the app (chatgpt.com/gpts/editor).
 2. Paste the Name, Description and Instructions shown in the app.
-3. Under Features: enable "Code Interpreter & Data Analysis".
+3. Under Features: make sure "Code Interpreter & Data Analysis" is ticked.
+   (The list also shows Web search and Image generation.)
 4. Scroll to Actions and click "Create new action".
 5. Once you are on the Action page: go back to CodeBridge and click
    "I opened the Action page". Only now does the app show the Schema step.
 6. Copy the Schema from the app and paste it into ChatGPT's Schema field.
-7. Open Authentication (the gear icon): choose API Key -> Bearer.
-8. Copy the CodeBridge secret from the app and paste it into the "API Key"
-   field.
+7. Next to Authentication, click the GEAR ICON. The field says "None" until
+   you do, and the options below only exist inside that box.
+8. In the box: set Authentication Type to "API Key", paste the CodeBridge
+   secret from the app into the "API Key" field, set Auth Type to "Bearer".
    IMPORTANT: This is NOT an OpenAI API key. It is your own private
    CodeBridge secret. Never share it.
-9. Save.
+9. Click Save.
 
 ------------------------------------------------------------------
 STEP 5 - Test the connection
 ------------------------------------------------------------------
-1. In ChatGPT, ask your GPT: "Check CodeBridge connection".
-2. When the GPT says CodeBridge is connected, click "Check connection" in the
-   app.
+1. On the Action page, scroll to "Available actions" and click "Test" on the
+   codebridgeHealth row. That is the call that reaches your Mac.
+2. Come back to CodeBridge and click "Check connection". You can also save the
+   GPT and ask it: "Check CodeBridge connection".
 3. The app shows READY - only then is the setup complete.
 
 ------------------------------------------------------------------
@@ -127,3 +130,6 @@ Troubleshooting
   the CodeBridge app will be shown.
 
 No Node.js, Homebrew, Xcode or terminal is needed. Everything is bundled.
+
+The same guide, with links:
+https://github.com/jobbsystemrapporter/codebridge/blob/main/docs/setup.md
