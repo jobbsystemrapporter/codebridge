@@ -9,6 +9,7 @@ import {
   Loader2,
   Lock,
   MousePointerClick,
+  Settings,
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -395,20 +396,50 @@ export function ConnectGuide({ onConnected }: Props) {
           </Section>
 
           <Section step="5" title="Set Authentication">
+            <p className="text-sm text-muted-foreground">
+              Authentication starts on <strong>None</strong>. Click the gear icon next to it to
+              open the settings box — the options below only appear there.
+            </p>
             <Illustration label="Illustration only — use the real controls in ChatGPT.">
               <div className="font-medium text-foreground">Authentication</div>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="size-4 text-primary" /> Type: <strong>API Key</strong>
+                <span className="flex-1 rounded-md border px-3 py-1.5 text-muted-foreground">None</span>
+                <span className="grid size-8 place-items-center rounded-md border">
+                  <Settings className="size-4 text-foreground" />
+                </span>
+                <span className="text-[11px] text-muted-foreground">← click this</span>
               </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="size-4 text-primary" /> Authorization: <strong>Bearer</strong>
+            </Illustration>
+
+            <p className="text-sm text-muted-foreground">Then, in the box that opens:</p>
+            <ol className="ml-4 list-decimal space-y-1.5 text-sm text-muted-foreground marker:text-muted-foreground">
+              <li>Set <strong>Authentication Type</strong> to <strong>API Key</strong>.</li>
+              <li>Paste the connection secret below into the <strong>API Key</strong> field.</li>
+              <li>Set <strong>Auth Type</strong> to <strong>Bearer</strong>.</li>
+              <li>Click <strong>Save</strong>.</li>
+            </ol>
+
+            <Illustration label="Illustration only — use the real controls in ChatGPT.">
+              <div className="font-medium text-foreground">Authentication</div>
+              <div className="text-[13px] text-muted-foreground">Authentication Type</div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full border px-2.5 py-1 text-muted-foreground">None</span>
+                <span className="rounded-full border border-primary bg-primary/10 px-2.5 py-1 font-medium text-foreground">API Key</span>
+                <span className="rounded-full border px-2.5 py-1 text-muted-foreground">OAuth</span>
+              </div>
+              <div className="mt-2 text-[13px] text-muted-foreground">API Key</div>
+              <div className="rounded-md border px-3 py-1.5 text-muted-foreground">
+                paste the connection secret here
+              </div>
+              <div className="mt-2 text-[13px] text-muted-foreground">Auth Type</div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full border px-2.5 py-1 text-muted-foreground">Basic</span>
+                <span className="rounded-full border border-primary bg-primary/10 px-2.5 py-1 font-medium text-foreground">Bearer</span>
+                <span className="rounded-full border px-2.5 py-1 text-muted-foreground">Custom</span>
               </div>
             </Illustration>
             <Screenshot name="chatgpt-auth.png" alt="Authentication API Key Bearer" />
-            <p className="text-sm text-muted-foreground">
-              Then paste the private CodeBridge connection secret below into the{" "}
-              <strong>API Key</strong> field and click <strong>Save</strong>.
-            </p>
+
             <CopyField id="actionSecret" label="Connection secret" value={setup.secret} secret />
             <p className="rounded-lg bg-muted/60 px-3 py-2.5 text-[13px] text-muted-foreground">
               This is a CodeBridge connection secret — <strong>not</strong> an OpenAI API key.
@@ -418,8 +449,25 @@ export function ConnectGuide({ onConnected }: Props) {
 
           <Section step="6" title="Test the connection">
             <p className="text-sm text-muted-foreground">
-              Save the GPT and ask it: <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[12px]">Check CodeBridge connection</code>.
-              When it answers that CodeBridge is connected, click below.
+              Still on the Action page, scroll to <strong>Available actions</strong> and click{" "}
+              <strong>Test</strong> on the <strong>codebridgeHealth</strong> row. That is the call
+              that reaches this Mac.
+            </p>
+            <Illustration label="Illustration only — use the real controls in ChatGPT.">
+              <div className="font-medium text-foreground">Available actions</div>
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[12px] text-foreground">codebridgeHealth</span>
+                <span className="text-muted-foreground">GET</span>
+                <span className="font-mono text-[12px] text-muted-foreground">/actions/health</span>
+                <span className="ml-auto rounded-full border bg-secondary px-3 py-1 text-secondary-foreground">
+                  Test
+                </span>
+              </div>
+            </Illustration>
+            <p className="text-sm text-muted-foreground">
+              Then come back here and click <strong>Check connection</strong>. You can also just
+              save the GPT and ask it{" "}
+              <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[12px]">Check CodeBridge connection</code>.
             </p>
             <Button onClick={checkConnection} disabled={checking}>
               {checking ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}

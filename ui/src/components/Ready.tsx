@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ConnectGuide } from "@/components/ConnectGuide";
+import { FlowDemo } from "@/components/FlowDemo";
 import { TechDetails } from "@/components/TechDetails";
 import { WorkspacePanel } from "@/components/WorkspacePanel";
 import { api, type HistoryEntry, type Status } from "@/lib/api";
@@ -177,13 +178,16 @@ export function Ready({ status, onRefresh }: Props) {
         </Card>
       )}
 
+      <FlowDemo />
+
       <div className="mt-6 max-w-2xl">
         <TechDetails status={status} endpoint={null} />
       </div>
 
       <div className="mt-8 flex items-center gap-2 text-[13px] text-muted-foreground">
         <GitBranch className="size-4" />
-        ChatGPT is the AI. CodeBridge is the secure bridge to your Mac.
+        Read, write and edit your projects with ChatGPT — no separate coding tool, no API key
+        and no per-token billing. Your normal ChatGPT plan is the model.
       </div>
     </div>
   );

@@ -65,7 +65,7 @@ export function Stepper({ current }: { current: number }) {
 
       <div className="mt-4 flex items-center gap-1.5 text-[11px] text-sidebar-foreground/45">
         <Zap className="size-3" />
-        ChatGPT is the AI. CodeBridge is the bridge.
+        Read, write and edit code with your ChatGPT plan. No API key, no per-token billing.
       </div>
     </aside>
   );
