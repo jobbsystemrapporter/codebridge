@@ -10,6 +10,7 @@ import http from 'node:http';
 const home=await fsp.mkdtemp(path.join(os.tmpdir(),'cbsec-'));
 const proj=await fsp.mkdtemp(path.join(os.tmpdir(),'cbproj-'));
 process.env.CODEBRIDGE_HOME=home;
+process.env.CODEBRIDGE_LAUNCH_AGENT=path.join(home,'agent-marker.plist');
 const helper=process.env.CODEBRIDGE_HELPER||path.join(process.cwd(),'native-helper','.build','release','codebridge-helper');
 process.env.CODEBRIDGE_HELPER=helper;
 
@@ -89,6 +90,21 @@ try{
   r=await fetch(`${base}/api/config`,{method:'PATCH',headers:{...jsonHeaders,'x-codebridge-token':token},body:JSON.stringify({securityMode:'anything-goes'})});
   assert.equal(r.status,400,'securityMode must be validated');
 }finally{child.kill()}
+
+// --- 4. An isolated run must never touch the real user's launch agent --------
+// reset-test drives /api/uninstall against a sandboxed CODEBRIDGE_HOME, but the
+// agent lives outside it: without an override the suite deleted the user's real
+// agent and booted out their running service.
+const core2=await import('./core.mjs');
+assert.ok(!core2.LAUNCH_AGENT.startsWith(path.join(os.homedir(),'Library','LaunchAgents')),
+  'with CODEBRIDGE_LAUNCH_AGENT set, the real LaunchAgents path must not be used');
+const realAgent=path.join(os.homedir(),'Library','LaunchAgents','com.codebridge.app.plist');
+const marker=path.join(home,'agent-marker.plist');
+await fsp.writeFile(marker,'<?xml version="1.0"?>\n');
+const realExisted=await fsp.access(realAgent).then(()=>true,()=>false);
+await core2.removeLaunchAgent();
+assert.equal(await fsp.access(marker).then(()=>true,()=>false),false,'the overridden agent path must be removed');
+assert.equal(await fsp.access(realAgent).then(()=>true,()=>false),realExisted,'the real launch agent must be untouched');
 
 await fsp.rm(home,{recursive:true,force:true});
 await fsp.rm(proj,{recursive:true,force:true});

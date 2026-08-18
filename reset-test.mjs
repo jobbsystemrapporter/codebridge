@@ -8,7 +8,11 @@ async function start(port){
   const tmp=await fs.mkdtemp(path.join(os.tmpdir(),'codebridge-reset-'));
   const home=path.join(tmp,'state'),project=path.join(tmp,'project');
   await fs.mkdir(project);
-  const child=spawn(process.execPath,['server.mjs'],{env:{...process.env,CODEBRIDGE_HOME:home,PORT:String(port),CODEBRIDGE_PUBLIC_PORT:String(port+1)},stdio:'ignore'});
+  // Point the launch agent at the sandbox: uninstall removes it by absolute path,
+  // and without this the suite deletes the real user's agent.
+  const launchAgent=path.join(tmp,'com.codebridge.app.plist');
+  await fs.writeFile(launchAgent,'<?xml version="1.0"?>\n');
+  const child=spawn(process.execPath,['server.mjs'],{env:{...process.env,CODEBRIDGE_HOME:home,CODEBRIDGE_LAUNCH_AGENT:launchAgent,PORT:String(port),CODEBRIDGE_PUBLIC_PORT:String(port+1)},stdio:'ignore'});
   const base=`http://127.0.0.1:${port}`;
   const deadline=Date.now()+5000;
   let up=false;
@@ -18,7 +22,7 @@ async function start(port){
   }
   if(!up){child.kill('SIGTERM');throw new Error('server did not start')}
   const token=(await fs.readFile(path.join(home,'local-secret'),'utf8')).trim();
-  return {tmp,home,project,child,base,token};
+  return {tmp,home,project,child,base,token,launchAgent};
 }
 
 const s=await start(4407);
@@ -45,6 +49,7 @@ try{
   assert.equal(exited,true);
   const entries=(await fs.readdir(u.home)).sort();
   assert.deepEqual(entries,['audit.jsonl','config.json']);
+  await assert.rejects(()=>fs.access(u.launchAgent),'uninstall must remove the launch agent');
   console.log('Uninstall (wipe + exit) passed.');
 } finally { u.child.kill('SIGTERM'); await fs.rm(u.tmp,{recursive:true,force:true}); }
 

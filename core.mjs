@@ -26,13 +26,19 @@ export async function resetAllData(){
   await init();
   return {ok:true};
 }
+// CODEBRIDGE_HOME isolates state for tests, but the launch agent lives outside it.
+// Without an override, running the suite tears down the real user's agent — so the
+// path is overridable and the launchd domain is only touched on a real install.
+const isolated=!!process.env.CODEBRIDGE_HOME;
+export const LAUNCH_AGENT=process.env.CODEBRIDGE_LAUNCH_AGENT||path.join(os.homedir(),'Library','LaunchAgents','com.codebridge.app.plist');
 export async function removeLaunchAgent(){
-  try{await fsp.rm(path.join(os.homedir(),'Library','LaunchAgents','com.codebridge.app.plist'),{force:true})}catch{}
+  try{await fsp.rm(LAUNCH_AGENT,{force:true})}catch{}
 }
 // Deleting the plist does not unload a job launchd already has in memory, and the
 // agent runs with KeepAlive — so without this, exiting on uninstall just gets the
 // service restarted. bootout terminates this process too, hence the exit fallback.
 export async function unloadLaunchAgent(){
+  if(isolated)return;
   try{await execFileAsync('/bin/launchctl',['bootout',`gui/${process.getuid()}/com.codebridge.app`])}catch{}
 }
 export function expand(p){return path.resolve(p.replace(/^~(?=\/|$)/,os.homedir()))}
