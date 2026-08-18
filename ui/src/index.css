@@ -105,6 +105,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --font-sans: 'Geist Variable', sans-serif;
   --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
   --font-heading: var(--font-sans);
   --color-chart-5: var(--chart-5);
@@ -129,11 +130,40 @@ body,
 
 body {
   margin: 0;
-  background: var(--background);
+  background:
+    radial-gradient(1100px 520px at 82% -8%, oklch(0.82 0.09 155 / 0.5), transparent 62%),
+    radial-gradient(820px 460px at -8% 108%, oklch(0.8 0.07 190 / 0.38), transparent 58%),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+.dark body {
+  background:
+    radial-gradient(1100px 520px at 82% -8%, oklch(0.45 0.11 155 / 0.28), transparent 62%),
+    radial-gradient(820px 460px at -8% 108%, oklch(0.4 0.09 190 / 0.2), transparent 58%),
+    var(--background);
+}
+
+::selection {
+  background: oklch(0.72 0.15 155 / 0.35);
+}
+
+.brand-gradient {
+  background-image: linear-gradient(135deg, oklch(0.72 0.15 155), oklch(0.52 0.12 185));
+}
+
+.text-gradient {
+  background-image: linear-gradient(100deg, oklch(0.72 0.15 155), oklch(0.62 0.14 195));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark .text-gradient {
+  background-image: linear-gradient(100deg, oklch(0.8 0.14 155), oklch(0.68 0.13 190));
 }
 
 @layer base {

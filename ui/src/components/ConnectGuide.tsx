@@ -195,7 +195,7 @@ export function ConnectGuide({ onConnected }: Props) {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
         <p className="text-xs font-bold tracking-[0.2em] text-primary/70">CONNECT CODEBRIDGE</p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight">
+        <h2 className="mt-3 font-display text-4xl font-medium tracking-tight">
           Give ChatGPT a private address to this Mac.
         </h2>
         <p className="mt-3 max-w-xl text-muted-foreground">
@@ -254,7 +254,7 @@ export function ConnectGuide({ onConnected }: Props) {
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 space-y-4">
       <div>
         <p className="text-xs font-bold tracking-[0.2em] text-primary/70">CONNECT CHATGPT</p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight">
+        <h2 className="mt-3 font-display text-4xl font-medium tracking-tight">
           One step at a time. Do only what this page asks.
         </h2>
       </div>

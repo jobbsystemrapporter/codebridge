@@ -24,7 +24,7 @@ function useTheme() {
   const [dark, setDark] = useState(() => {
     const saved = localStorage.getItem("codebridge-theme");
     if (saved) return saved === "dark";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return true; // Dark is the default CodeBridge theme.
   });
 
   useEffect(() => {

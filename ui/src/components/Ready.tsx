@@ -98,7 +98,7 @@ export function Ready({ status, onRefresh }: Props) {
         READY
       </Badge>
 
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+      <h1 className="mt-4 font-display text-5xl font-medium tracking-tight sm:text-6xl">
         CodeBridge is ready.
       </h1>
       <p className="mt-3 max-w-xl text-muted-foreground">

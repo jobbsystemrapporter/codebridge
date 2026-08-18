@@ -12,7 +12,7 @@ export function Stepper({ current }: { current: number }) {
   return (
     <aside className="hidden h-full w-72 shrink-0 flex-col bg-sidebar p-7 text-sidebar-foreground md:flex">
       <div className="flex items-center gap-3">
-        <div className="grid size-10 place-items-center rounded-xl bg-sidebar-primary text-sm font-extrabold text-sidebar-primary-foreground">
+        <div className="brand-gradient grid size-10 place-items-center rounded-xl text-sm font-extrabold text-white shadow-lg shadow-emerald-500/20">
           CB
         </div>
         <div className="leading-tight">

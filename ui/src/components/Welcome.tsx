@@ -13,8 +13,9 @@ export function Welcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
       <p className="text-xs font-bold tracking-[0.2em] text-primary/70">CODEBRIDGE</p>
-      <h1 className="mt-3 max-w-xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-        Your code. Your ChatGPT. Connected.
+      <h1 className="mt-3 max-w-xl font-display text-5xl font-medium tracking-tight text-balance sm:text-6xl">
+        Your code. Your ChatGPT.{" "}
+        <span className="text-gradient">Connected.</span>
       </h1>
       <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
         CodeBridge gives ChatGPT a safe place to work with projects on this computer —
