@@ -6,9 +6,9 @@ CodeBridge is a small macOS app that gives a custom GPT safe, controlled access 
 
 The model is your existing ChatGPT plan. CodeBridge never asks for an OpenAI API key and adds no usage cost of its own.
 
-### [⬇ Download CodeBridge for macOS](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.1/CodeBridge-0.2.0-beta.1.dmg)
+### [⬇ Download CodeBridge for macOS](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.2/CodeBridge-0.2.0-beta.2.dmg)
 
-`v0.2.0-beta.1` · 90.5 MB · universal (Apple Silicon + Intel) · macOS 14 or newer · [how to install](#install)
+`v0.2.0-beta.2` · 91.0 MB · universal (Apple Silicon + Intel) · macOS 14 or newer · [how to install](#install)
 
 <img src="docs/screenshot.png" alt="CodeBridge after setup: the Ready screen, with example prompts and what ChatGPT is allowed to do" width="760">
 
@@ -39,7 +39,7 @@ You do **not** need Node.js, Homebrew, Xcode, an ngrok CLI, or Terminal. The app
 
 ## Install
 
-1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.1/CodeBridge-0.2.0-beta.1.dmg) and open it.
+1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.2/CodeBridge-0.2.0-beta.2.dmg) and open it.
 2. Drag **CodeBridge.app** to Applications.
 3. Open CodeBridge from Applications.
 

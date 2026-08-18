@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0-beta.2 (unreleased)
+## 0.2.0-beta.2
 
 - Reserved ngrok domain support, so the public address survives restarts. Without one the address changed every time CodeBridge started and the custom GPT silently stopped reaching the Mac.
 - Fixed three critical security issues: the executable allowlist could be bypassed with a path, approvals were not bound to the command shown, and `/mcp` plus `/api/session` were reachable without the local token. Regression tests cover all three.

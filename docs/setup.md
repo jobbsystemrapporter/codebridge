@@ -12,7 +12,7 @@ account. No Node.js, Homebrew, Xcode or Terminal — the app bundles what it use
 
 ## 1. Install the app
 
-1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.1/CodeBridge-0.2.0-beta.1.dmg) and open it.
+1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.2/CodeBridge-0.2.0-beta.2.dmg) and open it.
 2. Drag **CodeBridge.app** to the Applications shortcut in the DMG window.
 3. Open CodeBridge from Applications or Launchpad.
 

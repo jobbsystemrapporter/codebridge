@@ -1,6 +1,6 @@
 {
   "name": "codebridge",
-  "version": "0.2.0-beta.1",
+  "version": "0.2.0-beta.2",
   "private": true,
   "description": "A guided local bridge between ChatGPT and your code projects.",
   "scripts": {
