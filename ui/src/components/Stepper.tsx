@@ -12,11 +12,11 @@ export function Stepper({ current }: { current: number }) {
   return (
     <aside className="hidden h-full w-72 shrink-0 flex-col bg-sidebar p-7 text-sidebar-foreground md:flex">
       <div className="flex items-center gap-3">
-        <div className="brand-gradient grid size-10 place-items-center rounded-xl text-sm font-extrabold text-white shadow-lg shadow-emerald-500/20">
+        <div className="grid size-9 place-items-center rounded-md bg-primary text-[13px] font-semibold text-primary-foreground">
           CB
         </div>
         <div className="leading-tight">
-          <div className="text-[15px] font-bold tracking-tight">CodeBridge</div>
+          <div className="text-sm font-semibold tracking-tight">CodeBridge</div>
           <div className="text-xs text-sidebar-foreground/60">Local coding bridge</div>
         </div>
       </div>

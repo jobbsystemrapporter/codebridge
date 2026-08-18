@@ -41,8 +41,8 @@ export function Security({ current, onSave, onBack }: Props) {
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <p className="text-xs font-bold tracking-[0.2em] text-primary/70">SAFE BY DEFAULT</p>
-      <h1 className="mt-3 font-display text-5xl font-medium tracking-tight text-balance">
+      <p className="text-xs font-medium tracking-widest text-muted-foreground">SAFE BY DEFAULT</p>
+      <h1 className="mt-3 text-4xl font-semibold tracking-tight text-balance">
         You stay in control.
       </h1>
       <p className="mt-3 max-w-xl text-muted-foreground">

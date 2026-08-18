@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronDown, Moon, RotateCcw, Sun } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -39,21 +39,6 @@ import {
 
 const STEPS = ["Welcome", "Projects", "ChatGPT", "Security", "Ready"];
 
-function useTheme() {
-  const [dark, setDark] = useState(() => {
-    const saved = localStorage.getItem("codebridge-theme");
-    if (saved) return saved === "dark";
-    return true; // Dark is the default CodeBridge theme.
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-    localStorage.setItem("codebridge-theme", dark ? "dark" : "light");
-  }, [dark]);
-
-  return { dark, toggle: () => setDark((d) => !d) };
-}
-
 export default function App() {
   const [status, setStatus] = useState<Status | null>(null);
   const [step, setStep] = useState(0);
@@ -62,7 +47,6 @@ export default function App() {
   const [confirmAction, setConfirmAction] = useState<"erase" | "uninstall" | null>(null);
   const [uninstalled, setUninstalled] = useState(false);
   const processingApproval = useRef(false);
-  const { dark, toggle } = useTheme();
 
   const refresh = useCallback(async () => {
     const s = await api<Status>("/api/status");
@@ -204,8 +188,8 @@ export default function App() {
   if (uninstalled) {
     return (
       <div className="flex h-full items-center justify-center p-8">
-        <div className="max-w-md rounded-2xl border bg-card p-8 text-center shadow-xl">
-          <div className="mx-auto grid size-12 place-items-center rounded-xl bg-destructive/10 text-destructive">
+        <div className="max-w-md rounded-xl border bg-card p-8 text-center">
+          <div className="mx-auto grid size-12 place-items-center rounded-lg bg-destructive/10 text-destructive">
             <RotateCcw className="size-6" />
           </div>
           <h1 className="mt-4 text-2xl font-semibold tracking-tight">
@@ -226,22 +210,19 @@ export default function App() {
       <Stepper current={step} />
 
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-        <header className="flex items-center justify-between gap-3 border-b bg-background/80 px-6 py-3 backdrop-blur md:px-12">
+        <header className="flex items-center justify-between gap-3 border-b bg-background px-6 py-3 md:px-12">
           <div className="flex items-center gap-2 md:hidden">
             <div className="grid size-7 place-items-center rounded-lg bg-primary text-[11px] font-extrabold text-primary-foreground">
               CB
             </div>
-            <span className="text-xs font-bold tracking-[0.15em] text-muted-foreground">
+            <span className="text-xs font-medium tracking-widest text-muted-foreground">
               {eyebrow}
             </span>
           </div>
-          <div className="hidden text-xs font-bold tracking-[0.2em] text-muted-foreground md:block">
+          <div className="hidden text-xs font-medium tracking-widest text-muted-foreground md:block">
             {eyebrow}
           </div>
           <div className="flex items-center gap-1.5">
-            <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle dark mode">
-              {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
-            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="text-muted-foreground">

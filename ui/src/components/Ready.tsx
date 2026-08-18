@@ -73,7 +73,7 @@ export function Ready({ status, onRefresh }: Props) {
   if (!connected) {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-        <p className="text-xs font-bold tracking-[0.2em] text-primary/70">ONE LAST STEP</p>
+        <p className="text-xs font-medium tracking-widest text-muted-foreground">ONE LAST STEP</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight">Almost done.</h1>
         <p className="mt-3 max-w-xl text-muted-foreground">
           Your projects and safety settings are ready. Finish the ChatGPT connection below.
@@ -98,7 +98,7 @@ export function Ready({ status, onRefresh }: Props) {
         READY
       </Badge>
 
-      <h1 className="mt-4 font-display text-5xl font-medium tracking-tight sm:text-6xl">
+      <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
         CodeBridge is ready.
       </h1>
       <p className="mt-3 max-w-xl text-muted-foreground">
@@ -106,7 +106,7 @@ export function Ready({ status, onRefresh }: Props) {
         your projects.
       </p>
 
-      <div className="mt-8 rounded-2xl bg-sidebar p-6 text-sidebar-foreground shadow-lg">
+      <div className="mt-8 rounded-xl bg-sidebar p-6 text-sidebar-foreground shadow-lg">
         <h2 className="text-lg font-semibold">Start coding</h2>
         <p className="mt-1 text-sm text-sidebar-foreground/70">
           Try these prompts in your CodeBridge GPT:
