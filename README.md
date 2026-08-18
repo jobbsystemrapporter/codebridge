@@ -6,6 +6,9 @@ CodeBridge is a small macOS app that gives a custom GPT safe, controlled access 
 
 The model is your existing ChatGPT plan. CodeBridge never asks for an OpenAI API key and adds no usage cost of its own.
 
+<img src="docs/screenshot.png" alt="CodeBridge after setup: the Ready screen, with example prompts and what ChatGPT is allowed to do" width="820">
+
+
 > **Beta.** The app, the Custom GPT Action bridge, the workspace policy and the execution chain are implemented, tested, and verified end to end against a real custom GPT. See [Status and limitations](#status-and-limitations) before relying on it.
 
 ---
