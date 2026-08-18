@@ -65,7 +65,12 @@ async function publicApi(req,res,url){try{
 }catch(e){return json(res,e.status||500,{error:e.message})}}
 
 const server=http.createServer(async(req,res)=>{const url=new URL(req.url,`http://${req.headers.host||'127.0.0.1'}`);if(url.pathname==='/mcp'||url.pathname.startsWith('/api/'))return api(req,res,url);const relative=url.pathname==='/'?'index.html':url.pathname.slice(1);if(relative.includes('..')){res.writeHead(403);return res.end('Forbidden')}try{const file=join(root,'public',relative),data=await readFile(file),ext=file.slice(file.lastIndexOf('.'));res.writeHead(200,{'content-type':types[ext]||'application/octet-stream','cache-control':'no-store','content-security-policy':"default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'"});res.end(data)}catch{res.writeHead(404);res.end('Not found')}});
+// Another CodeBridge already owns the port (an app-spawned service, or a second
+// launch). Step aside cleanly instead of crash-looping under launchd KeepAlive.
+const yieldIfTaken=e=>{if(e.code==='EADDRINUSE'){console.log(`CodeBridge is already running on 127.0.0.1:${port}; leaving it in place.`);process.exit(0)}throw e};
+server.on('error',yieldIfTaken);
 server.listen(port,'127.0.0.1',()=>console.log(`CodeBridge is running at http://127.0.0.1:${port}`));
 const publicServer=http.createServer(async(req,res)=>{const url=new URL(req.url,`http://${req.headers.host||'127.0.0.1'}`);return publicApi(req,res,url)});
+publicServer.on('error',yieldIfTaken);
 publicServer.listen(publicPort,'127.0.0.1',()=>console.log(`CodeBridge public Action surface at http://127.0.0.1:${publicPort}`));
 startTransportIfConfigured().catch(()=>{});

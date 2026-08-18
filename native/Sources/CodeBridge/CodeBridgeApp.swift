@@ -43,20 +43,28 @@ final class ServiceController {
     func start() {
         ready = false; failed = false
         Task {
-            if await probe() { ready = true; return }
             guard let root = resolve(Bundle.main.object(forInfoDictionaryKey: "CodeBridgeRoot") as? String) else {
+                if await probe() { ready = true; return }
                 failed = true; message = "CodeBridge Core path is not configured in this development build."; return
             }
             let bundledNode = resolve(Bundle.main.object(forInfoDictionaryKey: "CodeBridgeNode") as? String)
             let nodeCandidates = [bundledNode, "/opt/homebrew/bin/node", "/usr/local/bin/node", "/usr/bin/node"].compactMap { $0 }
             guard let node = nodeCandidates.first(where: { FileManager.default.isExecutableFile(atPath: $0) }) else {
+                if await probe() { ready = true; return }
                 failed = true; message = "The bundled CodeBridge runtime is missing or damaged."; return
             }
             let helper = "\(root)/native-helper/.build/debug/codebridge-helper"
 
-            // Prefer the launchd agent so the bridge survives quitting the app and
-            // restarting the Mac. If it comes up, probe() finds it and we attach.
-            if LaunchAgent.install(node: node, root: root, helper: helper) {
+            // Install before probing. A service left running by an earlier launch
+            // would otherwise short-circuit here and the agent would never be set
+            // up, so the bridge would keep dying with the app. The agent is
+            // idempotent, and a server that finds the port already served exits
+            // cleanly rather than fighting for it.
+            let agent = LaunchAgent.install(node: node, root: root, helper: helper)
+
+            if await probe() { ready = true; return }
+
+            if agent {
                 for _ in 0..<30 { try? await Task.sleep(for: .milliseconds(200)); if await probe() { ready = true; return } }
             }
 

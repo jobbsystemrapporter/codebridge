@@ -38,7 +38,10 @@ const { stdout } = await exec('/usr/bin/plutil', ['-convert', 'json', '-o', '-',
 const job = JSON.parse(stdout);
 
 assert.equal(job.Label, 'com.codebridge.app');
-assert.equal(job.KeepAlive, true, 'KeepAlive is the whole point: the bridge must survive a crash');
+// KeepAlive is the whole point: the bridge must survive a crash. But it must not
+// restart a clean exit, or a service that steps aside from an already-served port
+// would be respawned into a throttled loop.
+assert.deepEqual(job.KeepAlive, { SuccessfulExit: false }, 'KeepAlive must restart on crash only');
 assert.equal(job.RunAtLoad, true, 'the bridge must come back after a restart without opening the app');
 assert.equal(job.ProgramArguments[0], process.execPath);
 assert.ok(path.isAbsolute(job.ProgramArguments[0]), 'node path must be absolute');

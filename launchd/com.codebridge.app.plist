@@ -18,7 +18,10 @@
   <key>HOME</key><string>__CODEBRIDGE_HOME__</string>
   <key>CODEBRIDGE_HELPER</key><string>__CODEBRIDGE_HELPER__</string>
 </dict>
-<key>RunAtLoad</key><true/><key>KeepAlive</key><true/>
+<key>RunAtLoad</key><true/>
+<!-- Restart on crash, but not on a clean exit: the service steps aside with
+     status 0 when another CodeBridge already holds the port. -->
+<key>KeepAlive</key><dict><key>SuccessfulExit</key><false/></dict>
 <key>ProcessType</key><string>Interactive</string>
 <key>StandardOutPath</key><string>/tmp/codebridge.log</string>
 <key>StandardErrorPath</key><string>/tmp/codebridge.err</string>

@@ -32,7 +32,9 @@ enum LaunchAgent {
                 "CODEBRIDGE_HELPER": helper,
             ],
             "RunAtLoad": true,
-            "KeepAlive": true,
+            // Restart on crash, but not when the service exits cleanly because
+            // another CodeBridge already holds the port — that would throttle-loop.
+            "KeepAlive": ["SuccessfulExit": false],
             "ProcessType": "Interactive",
         ]
 
