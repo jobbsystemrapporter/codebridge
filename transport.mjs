@@ -1,4 +1,5 @@
 import { getConfig,patchConfig,audit } from './core.mjs';
+import { readKeychainSecret,writeKeychainSecret } from './keychain.mjs';
 
 let listener=null;
 
@@ -9,7 +10,8 @@ export async function transportStatus(){
 }
 
 export async function startTransport(authtoken){
-  const token=String(authtoken||'').trim();
+  let token=String(authtoken||'').trim();
+  if(!token)token=(await readKeychainSecret())||'';
   if(!token)throw Object.assign(new Error('Paste the ngrok connection code from your ngrok account.'),{status:400});
   const ngrok=await import('@ngrok/ngrok');
   if(listener){try{await listener.close()}catch{}listener=null}
@@ -21,6 +23,7 @@ export async function startTransport(authtoken){
     const cfg=await getConfig();
     await patchConfig({...cfg,transport:{...(cfg.transport||{}),provider:'ngrok',ngrokConfigured:true},chatgpt:{...(cfg.chatgpt||{}),actionBaseUrl:url,connected:false}});
     await audit('transport.started',{provider:'ngrok',host:new URL(url).host});
+    await writeKeychainSecret(token).catch(()=>{});
     return {ok:true,url};
   }catch(e){
     listener=null;
@@ -29,3 +32,9 @@ export async function startTransport(authtoken){
 }
 
 export async function stopTransport(){if(listener){try{await listener.close()}finally{listener=null}}}
+
+export async function startTransportIfConfigured(){
+  const cfg=await getConfig();
+  if(!cfg.transport?.ngrokConfigured||listener)return false;
+  try{await startTransport();return true}catch{return false}
+}

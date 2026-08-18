@@ -5,6 +5,9 @@
 - Redesigned renderer built on React 19, Radix UI, Tailwind CSS v4 and shadcn/ui-style components, adapted to the CodeBridge onboarding flow.
 - Public HTTPS surface now exposes only authenticated `/actions/*`; admin API, MCP and the UI stay on localhost.
 - In-app lifecycle controls: "Erase all data & start fresh" wipes all local CodeBridge state, and "Uninstall CodeBridge" wipes state, removes the launch agent and moves the app to the Trash. Project files are never touched.
+- GPT Action flow now supports `openWorkspace` (surfaces AGENTS.md/CLAUDE.md) and structured `runCommand` with a real approval round-trip; developer mode runs safe commands without approval.
+- ngrok connection code is stored in Keychain (file fallback in dev) and the transport auto-reconnects on app start.
+- App icon, guided commit inside Safe Workspaces, GitHub Actions CI, optional real-screenshot slots in the ChatGPT guide, and a Privacy Policy URL field.
 - Universal app and DMG: works on both Apple Silicon and Intel Macs.
 - Bundled official Node.js v22 runtime for both architectures; no Homebrew/Node dependency on the user's Mac.
 - Bundled ngrok native binaries for arm64 and x86_64 inside the app.

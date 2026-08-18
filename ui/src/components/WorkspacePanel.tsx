@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle2, GitBranch, Loader2, Trash2 } from "lucide-react";
+import { CheckCircle2, GitBranch, GitCommitHorizontal, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { api, type WorktreeResult } from "@/lib/api";
+import { Input } from "@/components/ui/input";
 
 interface Review {
   project: string;
@@ -28,6 +29,7 @@ export function WorkspacePanel({ roots }: { roots: string[] }) {
   const [review, setReview] = useState<Review | null>(null);
   const [busy, setBusy] = useState("");
   const [confirmDiscard, setConfirmDiscard] = useState(false);
+  const [commitMsg, setCommitMsg] = useState("");
 
   async function create() {
     if (!roots.length) return;
@@ -99,6 +101,24 @@ export function WorkspacePanel({ roots }: { roots: string[] }) {
     }
   }
 
+  async function commitChanges() {
+    if (!result || !commitMsg.trim()) return;
+    setBusy("commit");
+    try {
+      await api("/api/worktree/commit", {
+        method: "POST",
+        body: JSON.stringify({ project: result.project, worktree: result.path, message: commitMsg.trim() }),
+      });
+      setCommitMsg("");
+      setReview(null);
+      toast.success("Changes committed in the safe workspace.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not commit changes.");
+    } finally {
+      setBusy("");
+    }
+  }
+
   return (
     <Card className="p-5">
       <div className="flex items-center justify-between gap-3">
@@ -125,6 +145,20 @@ export function WorkspacePanel({ roots }: { roots: string[] }) {
             </span>
           </div>
           <p className="mt-1.5 truncate font-mono text-xs text-muted-foreground">{result.path}</p>
+          <div className="mt-4 flex gap-2">
+            <Input
+              value={commitMsg}
+              onChange={(e) => setCommitMsg(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && commitChanges()}
+              placeholder="Commit message (required before applying)"
+              className="h-9 font-mono text-[13px]"
+              disabled={busy !== ""}
+            />
+            <Button variant="outline" size="sm" onClick={commitChanges} disabled={busy !== "" || !commitMsg.trim()}>
+              {busy === "commit" ? <Loader2 className="mr-2 size-3.5 animate-spin" /> : <GitCommitHorizontal className="mr-2 size-3.5" />}
+              Commit
+            </Button>
+          </div>
           <div className="mt-4 flex gap-2">
             <Button variant="outline" size="sm" onClick={reviewChanges} disabled={busy !== ""}>
               {busy === "review" ? <Loader2 className="mr-2 size-3.5 animate-spin" /> : null}

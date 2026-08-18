@@ -123,6 +123,55 @@ function Illustration({
   );
 }
 
+function Screenshot({ name, alt }: { name: string; alt: string }) {
+  const [missing, setMissing] = useState(false);
+  if (missing) return null;
+  return (
+    <img
+      src={`/guide-images/${name}`}
+      alt={alt}
+      onError={() => setMissing(true)}
+      className="w-full rounded-lg border"
+    />
+  );
+}
+
+function PrivacyField({ setup }: { setup: ActionSetup }) {
+  const [url, setUrl] = useState(setup.privacyPolicyUrl || "");
+  const [saved, setSaved] = useState(false);
+  async function save() {
+    try {
+      await api("/api/chatgpt/setup", {
+        method: "PUT",
+        body: JSON.stringify({ baseUrl: setup.baseUrl, privacyPolicyUrl: url.trim() }),
+      });
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 1400);
+    } catch {
+      setSaved(false);
+    }
+  }
+  return (
+    <div>
+      <Label htmlFor="privacyUrl" className="text-sm font-semibold">
+        Privacy policy URL (only needed for public GPT sharing)
+      </Label>
+      <div className="mt-2 flex gap-2">
+        <Input
+          id="privacyUrl"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://example.com/privacy"
+          className="font-mono text-[13px]"
+        />
+        <Button type="button" variant="outline" onClick={save}>
+          {saved ? "Saved ✓" : "Save"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export function ConnectGuide({ onConnected }: Props) {
   const [guide, setGuide] = useState<Guide | null>(null);
   const [phase, setPhase] = useState<"loading" | "ngrok" | "gpt">("loading");
@@ -244,6 +293,7 @@ export function ConnectGuide({ onConnected }: Props) {
           </div>
           {error && <p className="mt-3 text-[13px] font-medium text-destructive">{error}</p>}
         </Card>
+        <Screenshot name="ngrok-authtoken.png" alt="ngrok dashboard with your connection code" />
       </div>
     );
   }
@@ -278,8 +328,12 @@ export function ConnectGuide({ onConnected }: Props) {
             <div className="sm:col-span-2">
               <CopyField id="gptInstructions" label="Instructions" value={setup.instructions} multiline />
             </div>
+            <div className="sm:col-span-2">
+              <PrivacyField setup={setup} />
+            </div>
           </div>
         )}
+        <Screenshot name="chatgpt-editor.png" alt="ChatGPT GPT editor" />
       </Section>
 
       <Section step="2" title="Turn on Code Interpreter & Data Analysis">
@@ -298,6 +352,7 @@ export function ConnectGuide({ onConnected }: Props) {
             <span className="ml-auto text-[11px] text-muted-foreground">← turn this on</span>
           </div>
         </Illustration>
+        <Screenshot name="chatgpt-features.png" alt="Features with Code Interpreter enabled" />
       </Section>
 
       <Section step="3" title="Create the CodeBridge Action">
@@ -313,6 +368,7 @@ export function ConnectGuide({ onConnected }: Props) {
           <MousePointerClick className="mr-2 size-4" />
           {schemaRevealed ? "Action page opened" : "I opened the Action page →"}
         </Button>
+        <Screenshot name="chatgpt-create-action.png" alt="Create new action in ChatGPT" />
       </Section>
 
       {schemaRevealed && setup && (
@@ -328,6 +384,7 @@ export function ConnectGuide({ onConnected }: Props) {
               value={JSON.stringify(setup.schema, null, 2)}
               multiline
             />
+            <Screenshot name="chatgpt-schema.png" alt="ChatGPT Action Schema field" />
           </Section>
 
           <Section step="5" title="Set Authentication">
@@ -340,6 +397,7 @@ export function ConnectGuide({ onConnected }: Props) {
                 <ShieldCheck className="size-4 text-primary" /> Authorization: <strong>Bearer</strong>
               </div>
             </Illustration>
+            <Screenshot name="chatgpt-auth.png" alt="Authentication API Key Bearer" />
             <p className="text-sm text-muted-foreground">
               Then paste the private CodeBridge connection secret below into the{" "}
               <strong>API Key</strong> field and click <strong>Save</strong>.

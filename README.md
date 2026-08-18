@@ -73,6 +73,8 @@ cd ui && npm install && npm run build
 ```
 
 The build writes static assets to `public/`, which the local CodeBridge server serves unchanged.
+To add real ChatGPT screenshots to the onboarding guide, drop them into
+`ui/public/guide-images/` (filenames are documented in the README there).
 
 ```sh
 node test.mjs

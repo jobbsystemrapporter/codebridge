@@ -1,23 +1,36 @@
 name: CI
+
 on:
   push:
   pull_request:
+
 jobs:
-  node:
+  build:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 22 }
-      - run: node --check server.mjs && node --check core.mjs && node --check executor.mjs
-      - run: mkdir -p "$RUNNER_TEMP/codebridge-state" && echo "CODEBRIDGE_HOME=$RUNNER_TEMP/codebridge-state" >> "$GITHUB_ENV"
-      - run: node test.mjs
-      - run: node first-run-test.mjs
-      - run: node compat-test.mjs
-      - run: node connector-test.mjs
-      - run: node privacy-check.mjs
-      - run: swift build -c release --disable-sandbox
-        working-directory: native-helper
-      - run: CODEBRIDGE_HELPER="$PWD/native-helper/.build/release/codebridge-helper" node e2e.mjs
-      - run: swift build -c release --disable-sandbox
-        working-directory: native
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm ci && cd ui && npm ci
+      - name: Build native helper (arm64)
+        run: |
+          cd native-helper
+          swift build -c release --arch arm64 --scratch-path .build/arm64
+          mkdir -p .build/release
+          cp .build/arm64/release/codebridge-helper .build/release/codebridge-helper
+      - name: Build renderer
+        run: cd ui && npm run build
+      - name: Test suite
+        env:
+          CODEBRIDGE_HELPER: "${{ github.workspace }}/native-helper/.build/release/codebridge-helper"
+        run: |
+          node --check server.mjs
+          npm test
+          node first-run-test.mjs
+          node access-mode-test.mjs
+          node parity-test.mjs
+          node compat-test.mjs
+          node repo-check.mjs
+          node privacy-check.mjs

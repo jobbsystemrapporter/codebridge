@@ -43,6 +43,7 @@ export interface Preflight {
 export interface ActionSetup {
   baseUrl: string;
   configured: boolean;
+  privacyPolicyUrl?: string;
   secret: string;
   schema: unknown;
   instructions: string;

@@ -47,3 +47,16 @@ try{
   assert.deepEqual(entries,['audit.jsonl','config.json']);
   console.log('Uninstall (wipe + exit) passed.');
 } finally { u.child.kill('SIGTERM'); await fs.rm(u.tmp,{recursive:true,force:true}); }
+
+// Transport secret store roundtrip (file fallback under CODEBRIDGE_HOME).
+process.env.CODEBRIDGE_HOME=await fs.mkdtemp(path.join(os.tmpdir(),'codebridge-store-'));
+const store=await import('./keychain.mjs');
+assert.equal(await store.readKeychainSecret(),null);
+await store.writeKeychainSecret('ngrok-test-token');
+assert.equal(await store.readKeychainSecret(),'ngrok-test-token');
+const mode=(await fs.stat(path.join(process.env.CODEBRIDGE_HOME,'transport-secret'))).mode&0o777;
+assert.equal(mode,0o600);
+await store.deleteKeychainSecret();
+assert.equal(await store.readKeychainSecret(),null);
+console.log('Transport secret store (keychain/file) passed.');
+await fs.rm(process.env.CODEBRIDGE_HOME,{recursive:true,force:true});

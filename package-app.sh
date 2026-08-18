@@ -57,6 +57,7 @@ echo "==> Bundling CodeBridge Core"
 cp "$ROOT"/*.mjs "$CORE/"
 cp "$ROOT/package.json" "$ROOT/package-lock.json" "$CORE/"
 cp -R "$ROOT/public" "$CORE/public"
+cp "$ROOT/assets/CodeBridge.icns" "$APP/Contents/Resources/CodeBridge.icns"
 
 echo "==> Bundling ngrok SDK for both architectures"
 NGROK_STAGE="$CORE/node_modules/@ngrok"
@@ -88,6 +89,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <key>CFBundleIdentifier</key><string>com.codebridge.app</string>
 <key>CFBundleName</key><string>CodeBridge</string><key>CFBundleDisplayName</key><string>CodeBridge</string>
 <key>CFBundleExecutable</key><string>CodeBridge</string><key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleIconFile</key><string>CodeBridge</string>
 <key>CFBundleShortVersionString</key><string>0.2.0-beta.1</string><key>CFBundleVersion</key><string>2</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>CodeBridgeRoot</key><string>Contents/Resources/Core</string>
