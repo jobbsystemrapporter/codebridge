@@ -10,6 +10,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
+      # package-app.sh reads the bundled ngrok version out of node_modules, so the
+      # dependencies have to exist before the gate runs.
+      - run: npm ci
       - run: chmod +x scripts/release.sh scripts/package-app.sh scripts/package-dmg.sh
       - run: ./scripts/release.sh
       - uses: actions/upload-artifact@v4

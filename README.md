@@ -1,5 +1,10 @@
 # CodeBridge
 
+[![CI](https://github.com/jobbsystemrapporter/codebridge/actions/workflows/ci.yml/badge.svg)](https://github.com/jobbsystemrapporter/codebridge/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/jobbsystemrapporter/codebridge?include_prereleases&label=release)](https://github.com/jobbsystemrapporter/codebridge/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![macOS 14+](https://img.shields.io/badge/macOS-14%2B-lightgrey?logo=apple)
+
 **Code on your Mac from a normal ChatGPT subscription — no API key, no per-token billing, no developer setup.**
 
 CodeBridge is a small macOS app that gives a custom GPT safe, controlled access to project folders you explicitly choose. You pick the folders. ChatGPT reads, writes, edits and runs approved commands inside them. Nothing else on your Mac is reachable.
