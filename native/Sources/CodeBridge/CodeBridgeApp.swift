@@ -52,8 +52,16 @@ final class ServiceController {
             guard let node = nodeCandidates.first(where: { FileManager.default.isExecutableFile(atPath: $0) }) else {
                 failed = true; message = "The bundled CodeBridge runtime is missing or damaged."; return
             }
+            let helper = "\(root)/native-helper/.build/debug/codebridge-helper"
+
+            // Prefer the launchd agent so the bridge survives quitting the app and
+            // restarting the Mac. If it comes up, probe() finds it and we attach.
+            if LaunchAgent.install(node: node, root: root, helper: helper) {
+                for _ in 0..<30 { try? await Task.sleep(for: .milliseconds(200)); if await probe() { ready = true; return } }
+            }
+
             let p = Process(); p.executableURL = URL(fileURLWithPath: node); p.arguments = ["\(root)/server.mjs"]; p.currentDirectoryURL = URL(fileURLWithPath: root)
-            p.environment = ["PATH":"/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin","HOME":FileManager.default.homeDirectoryForCurrentUser.path,"TMPDIR":NSTemporaryDirectory(),"CODEBRIDGE_HELPER":"\(root)/native-helper/.build/debug/codebridge-helper"]
+            p.environment = ["PATH":"/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin","HOME":FileManager.default.homeDirectoryForCurrentUser.path,"TMPDIR":NSTemporaryDirectory(),"CODEBRIDGE_HELPER":helper]
             do { try p.run(); process = p } catch { failed = true; message = error.localizedDescription; return }
             for _ in 0..<30 { try? await Task.sleep(for: .milliseconds(200)); if await probe() { ready = true; return } }
             failed = true; message = "The local CodeBridge service did not become ready."

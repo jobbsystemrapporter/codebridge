@@ -195,6 +195,7 @@ Prefer first-party sources. Current reference set:
 - ngrok macOS setup/docs: https://ngrok.com/download/mac-os
 - ngrok Terms of Service: https://ngrok.com/tos
 - Apple macOS distribution: https://developer.apple.com/macos/distribution/
+- Apple launchd / launchctl: https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html
 
 Do not adopt code or architecture merely because a GitHub project looks useful. First verify that it serves the canonical Devspace-derived architecture, has an acceptable license, reduces beginner setup, and does not introduce OpenAI API billing or another model provider.
 

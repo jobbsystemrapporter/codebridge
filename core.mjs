@@ -29,6 +29,12 @@ export async function resetAllData(){
 export async function removeLaunchAgent(){
   try{await fsp.rm(path.join(os.homedir(),'Library','LaunchAgents','com.codebridge.app.plist'),{force:true})}catch{}
 }
+// Deleting the plist does not unload a job launchd already has in memory, and the
+// agent runs with KeepAlive — so without this, exiting on uninstall just gets the
+// service restarted. bootout terminates this process too, hence the exit fallback.
+export async function unloadLaunchAgent(){
+  try{await execFileAsync('/bin/launchctl',['bootout',`gui/${process.getuid()}/com.codebridge.app`])}catch{}
+}
 export function expand(p){return path.resolve(p.replace(/^~(?=\/|$)/,os.homedir()))}
 function blocked(p){const abs=expand(p);return BLOCKED.some(x=>abs===path.join(os.homedir(),x)||abs.startsWith(path.join(os.homedir(),x)+path.sep))}
 async function canonicalExisting(p){return fsp.realpath(expand(p))}

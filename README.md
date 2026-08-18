@@ -30,6 +30,14 @@ CodeBridge is deny-by-default around project access. Selecting one project does 
 
 The normal structured-command path does not invoke a shell. A legacy/developer shell path exists for development compatibility and should remain disabled for ordinary users. Git worktrees provide workflow isolation, not OS-level confidentiality. See `SECURITY.md` for the exact boundary.
 
+## Background service
+
+On first launch the app installs a launchd agent (`~/Library/LaunchAgents/com.codebridge.app.plist`)
+that runs the bundled Node runtime and keeps the local bridge alive, so ChatGPT can
+reach allowed projects after quitting the window or restarting the Mac. The agent
+points inside the app bundle and needs no system Node, Homebrew or Terminal. Both
+removal options below unload it.
+
 ## Removing CodeBridge
 
 In the app, open the "Start over" menu and choose either:

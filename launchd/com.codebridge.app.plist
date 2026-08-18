@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Template for source/development installs (see install.mjs). The packaged app does
+  not read this file: it generates the same job in LaunchAgent.swift so the paths
+  point inside the .app bundle.
+
+  Placeholders are substituted at install time. Node is an absolute path on purpose
+  — `/usr/bin/env node` would require a system Node, which CodeBridge exists to
+  avoid needing.
+-->
 <plist version="1.0"><dict>
 <key>Label</key><string>com.codebridge.app</string>
-<key>ProgramArguments</key><array><string>/usr/bin/env</string><string>node</string><string>__CODEBRIDGE_ROOT__/server.mjs</string></array>
+<key>ProgramArguments</key><array><string>__CODEBRIDGE_NODE__</string><string>__CODEBRIDGE_ROOT__/server.mjs</string></array>
+<key>WorkingDirectory</key><string>__CODEBRIDGE_ROOT__</string>
+<key>EnvironmentVariables</key><dict>
+  <key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  <key>HOME</key><string>__CODEBRIDGE_HOME__</string>
+  <key>CODEBRIDGE_HELPER</key><string>__CODEBRIDGE_HELPER__</string>
+</dict>
 <key>RunAtLoad</key><true/><key>KeepAlive</key><true/>
+<key>ProcessType</key><string>Interactive</string>
 <key>StandardOutPath</key><string>/tmp/codebridge.log</string>
 <key>StandardErrorPath</key><string>/tmp/codebridge.err</string>
 </dict></plist>

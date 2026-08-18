@@ -19,7 +19,7 @@
 1. Complete a real-account clean-user E2E: ngrok account -> Custom GPT Action -> CodeBridge -> selected project.
 2. Replace remaining developer-oriented GPT editor copy with current screenshots and one-action-at-a-time guidance.
 3. Persist/recover the ngrok transport credential using native Keychain support without exposing it to the web UI or logs.
-4. Confirm transport automatically reconnects after CodeBridge/Mac restart.
+4. Confirm on real hardware that the launchd agent and transport come back after a Mac restart.
 5. Remove all abandoned OpenAI Secure MCP Tunnel source/tests/docs.
 6. Run privacy scans on the packaged artifact and verify no developer state or credentials ship.
 7. Test the DMG on a clean macOS user/Mac, including the one-time Gatekeeper approval for a standalone app.
