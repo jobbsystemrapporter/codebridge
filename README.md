@@ -56,7 +56,7 @@ values to copy, plus troubleshooting.
 The app walks you through the same steps, one at a time:
 
 1. **Choose project folders.** Only these become reachable. Sensitive locations (SSH keys, cloud credentials, Keychains, Mail) are refused even if something asks for them.
-2. **Connect securely.** Paste your ngrok connection code. CodeBridge starts the HTTPS address itself and stores the code in your Keychain.
+2. **Connect securely.** Paste your ngrok connection code and your free reserved domain. CodeBridge starts the HTTPS address itself and stores the code in your Keychain. The reserved domain is what keeps the address the same across restarts.
 3. **Create the custom GPT.** CodeBridge generates the GPT instructions, the Action schema and a private connection secret, and shows you exactly where each one goes in the ChatGPT editor.
 4. **Test the connection.** When a real authenticated call from ChatGPT reaches your Mac, and not before, the app says Ready.
 
@@ -118,6 +118,7 @@ Honest about where the beta stands:
 
 - The app is **ad-hoc signed**, not notarised by Apple. Every user clears the one-time Gatekeeper block described above.
 - The onboarding guide uses **illustrations, not real ChatGPT screenshots**, so labels may drift as ChatGPT's editor changes.
+- The public address comes from ngrok. Reserve the free domain the app asks for — without it the address changes on every restart and the custom GPT has to be re-pointed.
 - The guide is **English only**. If your ChatGPT is set to another language, the control names you see will differ from the ones in the guide.
 - A **legacy free-form shell path** exists for development. It is disabled in Safe mode and should stay off for ordinary users.
 - Execution capabilities are signed and short-lived, but **replay within the capability's TTL is not yet rejected**.

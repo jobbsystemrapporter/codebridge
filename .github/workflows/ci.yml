@@ -32,6 +32,7 @@ jobs:
           node test/access-mode-test.mjs
           node test/security-regression-test.mjs
           node test/launchagent-test.mjs
+          node test/transport-test.mjs
           node test/parity-test.mjs
           node test/compat-test.mjs
           node test/repo-check.mjs

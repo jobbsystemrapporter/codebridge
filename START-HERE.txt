@@ -51,8 +51,13 @@ STEP 3 - Secure connection (ngrok)
 ------------------------------------------------------------------
 1. Create a free account at ngrok.com if you do not have one.
 2. In the app, click "Open ngrok". Sign in and copy your connection code
-   (authtoken) from the ngrok page.
-3. Paste the code into the app and click "Connect securely".
+   (authtoken) from the ngrok page. Paste it into the app.
+3. In the ngrok dashboard open "Domains" and create your free reserved domain
+   (for example example.ngrok-free.app). Paste it into the app's
+   "Your reserved address" field.
+   WHY: without it, ngrok gives you a NEW address every restart, and your
+   custom GPT stops reaching this Mac until you paste a new schema.
+4. Click "Connect securely".
 
 The app now creates a private, secure internet address to your Mac. This is
 transport only - it is not the OpenAI API and not an AI model.

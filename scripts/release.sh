@@ -9,7 +9,7 @@ mkdir -p native-helper/.build/release
 lipo -create native-helper/.build/arm64/release/codebridge-helper native-helper/.build/x86_64/release/codebridge-helper -output native-helper/.build/release/codebridge-helper
 lipo -archs native-helper/.build/release/codebridge-helper
 export CODEBRIDGE_HELPER="$PWD/native-helper/.build/release/codebridge-helper"
-echo '[2/13] Syntax + unit/security (isolated state)'; node --check src/server.mjs; node --check src/mcp.mjs; node test/test.mjs; node test/reset-test.mjs; node test/security-regression-test.mjs; node test/launchagent-test.mjs
+echo '[2/13] Syntax + unit/security (isolated state)'; node --check src/server.mjs; node --check src/mcp.mjs; node test/test.mjs; node test/reset-test.mjs; node test/security-regression-test.mjs; node test/launchagent-test.mjs; node test/transport-test.mjs
 echo '[3/13] Access-mode safety'; node test/access-mode-test.mjs
 echo '[4/13] Clean first-run'; node test/first-run-test.mjs
 echo '[5/13] DevSpace replacement contract'; node test/parity-test.mjs

@@ -177,6 +177,7 @@ export function ConnectGuide({ onConnected }: Props) {
   const [guide, setGuide] = useState<Guide | null>(null);
   const [phase, setPhase] = useState<"loading" | "ngrok" | "gpt">("loading");
   const [authtoken, setAuthtoken] = useState("");
+  const [domain, setDomain] = useState("");
   const [starting, setStarting] = useState(false);
   const [checking, setChecking] = useState(false);
   const [schemaRevealed, setSchemaRevealed] = useState(false);
@@ -204,7 +205,7 @@ export function ConnectGuide({ onConnected }: Props) {
     try {
       await api("/api/transport/start", {
         method: "POST",
-        body: JSON.stringify({ authtoken: authtoken.trim() }),
+        body: JSON.stringify({ authtoken: authtoken.trim(), domain: domain.trim() }),
       });
       await load();
     } catch (e) {
@@ -276,7 +277,7 @@ export function ConnectGuide({ onConnected }: Props) {
             <Label htmlFor="ngrokToken" className="text-sm font-semibold">
               2 · Paste the connection code here
             </Label>
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2">
               <Input
                 id="ngrokToken"
                 type="password"
@@ -286,11 +287,50 @@ export function ConnectGuide({ onConnected }: Props) {
                 autoComplete="off"
                 className="font-mono text-[13px]"
               />
-              <Button onClick={startTransport} disabled={starting || !authtoken.trim()}>
-                {starting ? <Loader2 className="mr-2 size-4 animate-spin" /> : <Lock className="mr-2 size-4" />}
-                {starting ? "Connecting…" : "Connect securely"}
+            </div>
+          </div>
+
+          <div className="mt-5 border-t pt-5">
+            <Label htmlFor="ngrokDomain" className="text-sm font-semibold">
+              3 · Your reserved address
+            </Label>
+            <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
+              In your ngrok dashboard, open <strong>Domains</strong> and create your free
+              domain, then paste it here. Without it ngrok gives you a new address every
+              time CodeBridge restarts, and your GPT stops reaching this Mac until you
+              paste a new schema into ChatGPT.
+            </p>
+            <div className="mt-2 flex gap-2">
+              <Input
+                id="ngrokDomain"
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
+                placeholder="example.ngrok-free.app"
+                autoComplete="off"
+                spellCheck={false}
+                className="font-mono text-[13px]"
+              />
+              <Button
+                variant="outline"
+                onClick={() => openExternal("https://dashboard.ngrok.com/domains")}
+              >
+                <ExternalLink className="mr-2 size-4" />
+                Open Domains
               </Button>
             </div>
+          </div>
+
+          <div className="mt-5 flex items-center gap-3 border-t pt-5">
+            <Button onClick={startTransport} disabled={starting || !authtoken.trim()}>
+              {starting ? <Loader2 className="mr-2 size-4 animate-spin" /> : <Lock className="mr-2 size-4" />}
+              {starting ? "Connecting…" : "Connect securely"}
+            </Button>
+            {!domain.trim() && (
+              <span className="text-[12.5px] text-muted-foreground">
+                Without a reserved address you will have to redo the ChatGPT step after
+                every restart.
+              </span>
+            )}
           </div>
           {error && <p className="mt-3 text-[13px] font-medium text-destructive">{error}</p>}
         </Card>

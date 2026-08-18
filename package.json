@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/server.mjs",
     "check": "for f in src/*.mjs; do node --check $f || exit 1; done",
-    "test": "node test/test.mjs && node test/action-test.mjs && node test/reset-test.mjs && node test/security-regression-test.mjs && node test/launchagent-test.mjs",
+    "test": "node test/test.mjs && node test/action-test.mjs && node test/reset-test.mjs && node test/security-regression-test.mjs && node test/launchagent-test.mjs && node test/transport-test.mjs",
     "test:e2e": "node test/e2e.mjs",
     "build:ui": "cd ui && npm run build",
     "release": "./scripts/release.sh",

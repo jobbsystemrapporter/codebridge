@@ -41,7 +41,7 @@ async function api(req,res,url){try{
   if(req.method==='GET'&&url.pathname==='/api/approvals')return json(res,200,{items:listApprovals()});
   if(req.method==='POST'&&url.pathname==='/api/approvals/decide'){const b=await body(req);return json(res,200,decideApproval(b.id,!!b.allow))}
   if(req.method==='GET'&&url.pathname==='/api/transport')return json(res,200,await transportStatus());
-  if(req.method==='POST'&&url.pathname==='/api/transport/start'){const b=await body(req);return json(res,200,await startTransport(b.authtoken))}
+  if(req.method==='POST'&&url.pathname==='/api/transport/start'){const b=await body(req);return json(res,200,await startTransport(b.authtoken,b.domain))}
   if(req.method==='GET'&&url.pathname==='/api/chatgpt/setup')return json(res,200,await actionSetup());
   if(req.method==='PUT'&&url.pathname==='/api/chatgpt/setup'){const b=await body(req);return json(res,200,await configureAction(b))}
   if(req.method==='GET'&&url.pathname==='/api/chatgpt/preflight'){const cfg=await getConfig(),setup=await actionSetup();const checks=[{id:'core',ok:true,label:'CodeBridge Core'},{id:'project',ok:cfg.allowedRoots.length>0,label:'At least one project selected'},{id:'https',ok:setup.configured,label:'Public HTTPS address configured'},{id:'action',ok:!!cfg.chatgpt?.connected,label:'ChatGPT Action reached this Mac'}];return json(res,200,{ready:checks.every(x=>x.ok),localReady:checks.slice(0,2).every(x=>x.ok),checks,endpoint:setup.baseUrl?`${setup.baseUrl}/actions/health`:null})}
@@ -67,10 +67,10 @@ async function publicApi(req,res,url){try{
 const server=http.createServer(async(req,res)=>{const url=new URL(req.url,`http://${req.headers.host||'127.0.0.1'}`);if(url.pathname==='/mcp'||url.pathname.startsWith('/api/'))return api(req,res,url);const relative=url.pathname==='/'?'index.html':url.pathname.slice(1);if(relative.includes('..')){res.writeHead(403);return res.end('Forbidden')}try{const file=join(root,'public',relative),data=await readFile(file),ext=file.slice(file.lastIndexOf('.'));res.writeHead(200,{'content-type':types[ext]||'application/octet-stream','cache-control':'no-store','content-security-policy':"default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'"});res.end(data)}catch{res.writeHead(404);res.end('Not found')}});
 // Another CodeBridge already owns the port (an app-spawned service, or a second
 // launch). Step aside cleanly instead of crash-looping under launchd KeepAlive.
-const yieldIfTaken=e=>{if(e.code==='EADDRINUSE'){console.log(`CodeBridge is already running on 127.0.0.1:${port}; leaving it in place.`);process.exit(0)}throw e};
-server.on('error',yieldIfTaken);
+const yieldIfTaken=which=>e=>{if(e.code==='EADDRINUSE'){console.log(`CodeBridge is already running on 127.0.0.1:${which}; leaving it in place.`);process.exit(0)}throw e};
+server.on('error',yieldIfTaken(port));
 server.listen(port,'127.0.0.1',()=>console.log(`CodeBridge is running at http://127.0.0.1:${port}`));
 const publicServer=http.createServer(async(req,res)=>{const url=new URL(req.url,`http://${req.headers.host||'127.0.0.1'}`);return publicApi(req,res,url)});
-publicServer.on('error',yieldIfTaken);
+publicServer.on('error',yieldIfTaken(publicPort));
 publicServer.listen(publicPort,'127.0.0.1',()=>console.log(`CodeBridge public Action surface at http://127.0.0.1:${publicPort}`));
 startTransportIfConfigured().catch(()=>{});

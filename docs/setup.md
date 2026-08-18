@@ -45,7 +45,18 @@ credentials, Keychains, Mail — are refused even if something asks for them.
 
 1. Create a free account at [ngrok.com](https://ngrok.com) if you do not have one.
 2. In the app, click **Open ngrok**, sign in, and copy your connection code (authtoken).
-3. Paste it into the app and click **Connect securely**.
+   Paste it into the app.
+3. In the ngrok dashboard, open **Domains** and create your free reserved
+   domain — something like `example.ngrok-free.app`. Paste it into the app's
+   **Your reserved address** field.
+4. Click **Connect securely**.
+
+Step 3 matters more than it looks. Without a reserved domain, ngrok gives you a
+different address every time CodeBridge restarts, and the custom GPT you are
+about to create has the address baked into its Action schema — so it would stop
+reaching your Mac after every restart until you pasted a new schema into
+ChatGPT. One reserved domain is included free, and it is the same address
+forever.
 
 CodeBridge now has a private HTTPS address to your Mac. This is transport
 only: it is not an AI model and not the OpenAI API. Your connection code is
@@ -110,8 +121,8 @@ clear the one-time Gatekeeper block described in step 1.
 
 **The GPT cannot reach CodeBridge.** Your Mac must be awake and online. Check
 that the connection is still up in the app, and reconnect from step 3 if not.
-The ngrok address changes when the connection restarts, so update the Action
-schema's server URL if it has.
+If you set up without a reserved domain, your address changed on restart: add
+the domain in the app, reconnect, and paste the fresh schema into the Action.
 
 **The GPT answers but never runs anything.** Check that the Schema and the
 Bearer secret are both saved in the Action settings, and that

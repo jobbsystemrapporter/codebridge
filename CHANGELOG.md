@@ -2,6 +2,12 @@
 
 ## 0.2.0-beta.2 (unreleased)
 
+- Reserved ngrok domain support, so the public address survives restarts. Without one the address changed every time CodeBridge started and the custom GPT silently stopped reaching the Mac.
+- Fixed three critical security issues: the executable allowlist could be bypassed with a path, approvals were not bound to the command shown, and `/mcp` plus `/api/session` were reachable without the local token. Regression tests cover all three.
+- The app installs and loads its own launchd agent, so the bridge survives quitting the app and restarting the Mac.
+- Repository restructured into `src/`, `test/` and `scripts/`; test and gate scripts no longer ship inside the app bundle.
+- Renderer rebuilt on the stock shadcn/ui neutral dark theme, dark only.
+
 - Redesigned renderer built on React 19, Radix UI, Tailwind CSS v4 and shadcn/ui-style components, adapted to the CodeBridge onboarding flow.
 - Public HTTPS surface now exposes only authenticated `/actions/*`; admin API, MCP and the UI stay on localhost.
 - In-app lifecycle controls: "Erase all data & start fresh" wipes all local CodeBridge state, and "Uninstall CodeBridge" wipes state, removes the launch agent and moves the app to the Trash. Project files are never touched.
