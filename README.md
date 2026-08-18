@@ -1,137 +1,140 @@
 # CodeBridge
 
-**Code with ChatGPT on local Mac projects without learning MCP or installing a developer stack.**
+**Code on your Mac from a normal ChatGPT subscription — no API key, no per-token billing, no developer setup.**
 
-CodeBridge is a local macOS bridge between ChatGPT and folders you explicitly allow. It is designed for a simple flow: install CodeBridge, choose a project, connect ChatGPT, and work. Project files and local state remain on the user's Mac unless the user explicitly sends content through their ChatGPT workflow.
+CodeBridge is a small macOS app that gives a custom GPT safe, controlled access to project folders you explicitly choose. You pick the folders. ChatGPT reads, writes, edits and runs approved commands inside them. Nothing else on your Mac is reachable.
 
-> Beta: the local app, Custom GPT Action bridge, workspace policy and execution chain are implemented and tested. CodeBridge does not use an OpenAI API key for the model: the user's normal ChatGPT plan supplies the model. Public distribution still requires a stable per-installation HTTPS transport. CodeBridge ships as a standalone, ad-hoc signed app; it is not registered with Apple.
+The model is your existing ChatGPT plan. CodeBridge never asks for an OpenAI API key and adds no usage cost of its own.
 
-## Current beta
+> **Beta.** The app, the Custom GPT Action bridge, the workspace policy and the execution chain are implemented, tested, and verified end to end against a real custom GPT. See [Status and limitations](#status-and-limitations) before relying on it.
 
-- Universal native macOS app and DMG for Apple Silicon and Intel Macs, macOS 14+.
-- Fully bundled runtime: Node.js and the ngrok transport binary are inside the app; users do not need Node.js, Homebrew, or an ngrok CLI.
-- New renderer built with React, Radix UI and Tailwind CSS v4 (shadcn/ui-style components), adapted to the CodeBridge onboarding flow.
-- Custom GPT Action bridge with generated OpenAPI schema and per-install Bearer authentication.
-- Embedded ngrok HTTPS transport using the official JavaScript SDK; no ngrok CLI required for end users.
-- Optional local HTTP MCP compatibility for developer clients; not part of normal ChatGPT onboarding.
-- Explicit allowed projects through a native folder picker.
-- `open_workspace` with AGENTS.md / CLAUDE.md project instructions.
-- File list/read/write and Git inspection.
-- Safe Git worktrees for isolated changes.
-- Structured command execution through a native Swift helper without invoking a shell.
-- Executable policy, filtered child environment and sensitive-path rules.
-- Short-lived signed, single-use workspace capabilities.
-- One-time native approval prompts for higher-risk commands.
-- Local diagnostics, audit/history, privacy scanning and release gates.
+---
+
+## What you can do
+
+Once connected, you talk to your GPT normally:
+
+| You ask | CodeBridge does |
+| --- | --- |
+| *"Show me my projects"* | Lists only the folders you allowed |
+| *"Open this project and explain its structure"* | Opens the project and reads its `AGENTS.md` / `CLAUDE.md` instructions |
+| *"Find the bug, fix it and run the tests"* | Edits files in place, then runs the test command after you approve it |
+| *"Show me what changed in Git"* | Reports branch and working-tree status |
+
+Changes land in your real files. If you would rather keep them separate, CodeBridge can create an isolated Git worktree so the GPT's work never touches your project until you apply it.
+
+## Requirements
+
+- macOS 14 or newer, Apple Silicon or Intel
+- A ChatGPT plan that can create custom GPTs
+- A free [ngrok](https://ngrok.com) account, for the secure address between ChatGPT and your Mac
+
+You do **not** need Node.js, Homebrew, Xcode, an ngrok CLI, or Terminal. The app bundles everything it uses.
+
+## Install
+
+1. Download the DMG from [Releases](../../releases).
+2. Open it and drag **CodeBridge.app** to Applications.
+3. Open CodeBridge from Applications.
+
+CodeBridge is a standalone app and is not registered with Apple, so macOS blocks the first launch. This is expected and is a one-time step:
+
+- **macOS 15 and newer:** try to open it, then go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway** next to the CodeBridge message.
+- **macOS 14:** right-click CodeBridge.app → **Open** → **Open**.
+
+## Set up
+
+The app walks you through it, one step at a time:
+
+1. **Choose project folders.** Only these become reachable. Sensitive locations (SSH keys, cloud credentials, Keychains, Mail) are refused even if something asks for them.
+2. **Connect securely.** Paste your ngrok connection code. CodeBridge starts the HTTPS address itself and stores the code in your Keychain.
+3. **Create the custom GPT.** CodeBridge generates the GPT instructions, the Action schema and a private connection secret, and shows you exactly where each one goes in the ChatGPT editor.
+4. **Test the connection.** When a real authenticated call from ChatGPT reaches your Mac, and not before, the app says Ready.
+
+CodeBridge keeps running in the background after you close the window, so your GPT stays connected.
+
+## How it works
+
+```text
+Your ChatGPT subscription
+        │
+Custom GPT you create in ChatGPT
+        │
+GPT Action (OpenAPI schema)
+        │
+Bearer authentication — a secret unique to your installation
+        │
+Public HTTPS address (ngrok)
+        │
+CodeBridge on your Mac
+        ├── allowed folders only
+        ├── AGENTS.md / CLAUDE.md project instructions
+        ├── approvals for risky commands
+        ├── audit log of every action
+        ├── signed, short-lived execution capabilities
+        ├── native execution helper (no shell)
+        └── optional Git worktrees
+        │
+Your project files
+```
+
+ChatGPT is the AI. CodeBridge is the bridge and the gatekeeper — the security decisions are enforced by CodeBridge itself, not by instructions in a prompt that a model could be talked out of.
+
+The public address exposes **only** the authenticated `/actions/*` surface. The local admin API, the optional MCP endpoint and the app's own interface stay on `127.0.0.1` and are never published through the tunnel.
 
 ## Security model
 
-CodeBridge is deny-by-default around project access. Selecting one project does not grant access to the rest of the Mac. Security decisions are enforced by CodeBridge Core/native code rather than relying on instructions in a GPT prompt.
+CodeBridge is deny-by-default. Choosing one project does not grant access to the rest of your Mac.
 
-The normal structured-command path does not invoke a shell. A legacy/developer shell path exists for development compatibility and should remain disabled for ordinary users. Git worktrees provide workflow isolation, not OS-level confidentiality. See `SECURITY.md` for the exact boundary.
+- **Paths** are canonicalised before authorisation, so symlinks cannot escape an allowed folder.
+- **Commands** run through a native helper without a shell. The executable must be a bare command name from a fixed allowlist; anything else is refused by both the app and the helper.
+- **Approvals** are bound to the exact command you were shown. An approval cannot be reused for a different one.
+- **The local API** requires a per-installation secret and pins the `Host` header to loopback, so a web page cannot reach it by DNS rebinding.
+- **Git worktrees** isolate workflow and review. They are not an OS-level sandbox, and CodeBridge does not claim to be a VM or container.
 
-## Background service
-
-On first launch the app installs a launchd agent (`~/Library/LaunchAgents/com.codebridge.app.plist`)
-that runs the bundled Node runtime and keeps the local bridge alive, so ChatGPT can
-reach allowed projects after quitting the window or restarting the Mac. The agent
-points inside the app bundle and needs no system Node, Homebrew or Terminal. Both
-removal options below unload it.
+Full details and the exact boundary: [SECURITY.md](SECURITY.md).
 
 ## Removing CodeBridge
 
-In the app, open the "Start over" menu and choose either:
+In the app, open **Start over**:
 
-- **Erase all data & start fresh** – deletes all local CodeBridge state (configuration, project list, secrets, logs, workspaces) and returns to first-run setup.
-- **Uninstall CodeBridge** – erases all state, removes the launch agent and moves `CodeBridge.app` to the Trash.
+- **Erase all data & start fresh** — deletes all local CodeBridge state (configuration, project list, secrets, logs, workspaces) and returns to first-run setup.
+- **Uninstall CodeBridge** — erases all state, unloads the background service, removes the launch agent and moves the app to the Trash.
 
 Your project folders are never modified or deleted by either option.
 
-## Architecture
+## Status and limitations
 
-```text
-ChatGPT subscription + custom GPT
-   |
-GPT Action (OpenAPI + Bearer auth)
-   |
-stable public HTTPS transport
-   |
-CodeBridge.app
-   |-- explicit workspace policy
-   |-- AGENTS.md / CLAUDE.md instructions
-   |-- approvals + audit
-   |-- signed one-use capabilities
-   |-- native execution helper
-   |-- Git worktrees
-   `-- files / Git / commands
-   |
-User-selected projects
-```
+Honest about where the beta stands:
 
-Each installation owns its own local state and credentials. A public CodeBridge build does not contain the developer's projects, paths, tokens, logs, tunnel IDs or configuration.
+- The app is **ad-hoc signed**, not notarised by Apple. Every user clears the one-time Gatekeeper block described above.
+- The onboarding guide uses **illustrations, not real ChatGPT screenshots**, so labels may drift as ChatGPT's editor changes.
+- The guide is **English only**. If your ChatGPT is set to another language, the control names you see will differ from the ones in the guide.
+- A **legacy free-form shell path** exists for development. It is disabled in Safe mode and should stay off for ordinary users.
+- Execution capabilities are signed and short-lived, but **replay within the capability's TTL is not yet rejected**.
 
-## Development
+## Building from source
 
-Requirements for building from source: macOS 14+, Apple Silicon, Node.js and Swift 6.
-
-The web renderer lives in `ui/` (Vite + React + Tailwind CSS v4 + Radix UI). Build it with:
+Requires macOS 14+, Node.js 20+ and Swift 6.
 
 ```sh
-cd ui && npm install && npm run build
+cd ui && npm install && npm run build   # renderer → public/
+npm test                                 # core, action bridge, security regressions
+./release.sh                             # full gate: build, test, package .app + DMG, verify
 ```
 
-The build writes static assets to `public/`, which the local CodeBridge server serves unchanged.
-To add real ChatGPT screenshots to the onboarding guide, drop them into
-`ui/public/guide-images/` (filenames are documented in the README there).
+`release.sh` builds universal binaries, runs the execution end-to-end test, packages the app and DMG, verifies signatures and checksums, and runs the privacy scan.
 
-```sh
-node test.mjs
-node compat-test.mjs
-node connector-test.mjs
-node privacy-check.mjs
-```
+Architecture and contribution rules live in [AGENTS.md](AGENTS.md), which is the binding contract for changes.
 
-Build the native components and all release artifacts with:
+## Documentation
 
-```sh
-./release.sh
-```
+- [SECURITY.md](SECURITY.md) — security model and reporting
+- [SUPPORT.md](SUPPORT.md) — getting help, filing bugs
+- [CONTRIBUTING.md](CONTRIBUTING.md) — contribution rules
+- [ROADMAP.md](ROADMAP.md) — what is done and what is next
+- [CHANGELOG.md](CHANGELOG.md) — release history
 
-The release gate builds the Swift helper and app, runs execution E2E, packages the `.app` and DMG, verifies signatures/checksums, and runs the privacy scan.
+## License
 
-## Public-release gates
-
-Before the first downloadable public beta, maintainers must complete a real Custom GPT Action E2E test through the chosen public HTTPS transport. No OpenAI API credential is part of the normal CodeBridge architecture.
-
-CodeBridge is distributed as a standalone app without an Apple Developer ID, so Gatekeeper blocks it on first launch and the user approves it once under System Settings → Privacy & Security → Open Anyway (macOS 15+) or via right-click → Open (macOS 14). `START-HERE.txt` in the DMG walks through this.
-
-See `MIGRATION.md`, `SECURITY.md`, `SUPPORT.md`, `CONTRIBUTING.md`, and `CHANGELOG.md`.
-
-## Starta appen / How to run
-
-Already packaged (no installs needed):
-
-```sh
-open dist/CodeBridge.app
-```
-
-or double-click `CodeBridge.app` in the `dist/` folder. To distribute, give
-others the DMG (`dist/CodeBridge-0.2.0-beta.1.dmg`): they mount it, drag
-`CodeBridge.app` to Applications, and open it. Because the app is standalone
-and not registered with Apple, macOS blocks the first launch; the user allows
-it once under System Settings → Privacy & Security → Open Anyway (macOS 15+)
-or right-click → Open (macOS 14).
-The DMG also contains `START-HERE.txt` – a complete step-by-step guide from
-installation through ngrok, Custom GPT setup, connection test and usage.
-
-Verify the local service is running:
-
-```sh
-curl http://127.0.0.1:4317/api/status
-```
-
-From source, after building the renderer and core:
-
-```sh
-npm start
-```
+[MIT](LICENSE)

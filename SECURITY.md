@@ -20,4 +20,4 @@ Git worktrees protect workflow/review, not operating-system confidentiality. The
 
 ## Reporting
 
-For a public release, configure a private GitHub Security Advisory contact before accepting external testers. Do not post credentials, private repository contents or exploit details in public issues.
+Report vulnerabilities privately through GitHub: **Security → Report a vulnerability** on this repository. Do not post credentials, private repository contents or exploit details in public issues.
