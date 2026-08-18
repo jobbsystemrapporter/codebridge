@@ -98,6 +98,8 @@ or double-click `CodeBridge.app` in the `dist/` folder. To distribute, give
 others the DMG (`dist/CodeBridge-0.2.0-beta.1.dmg`): they mount it, drag
 `CodeBridge.app` to Applications, and open it. Until the app is Developer ID
 signed and notarized, macOS may ask to right-click → Open once.
+The DMG also contains `START-HERE.txt` – a complete step-by-step guide from
+installation through ngrok, Custom GPT setup, connection test and usage.
 
 Verify the local service is running:
 
