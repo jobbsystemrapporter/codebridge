@@ -1,119 +1,106 @@
-CodeBridge – Kom igång, hela vägen
-==================================
+CodeBridge - Getting Started, the whole way
+===========================================
 
-Vad är CodeBridge?
-CodeBridge är ett Mac-program som låter ChatGPT arbeta med dina kodprojekt
-från en vanlig ChatGPT-konversation. ChatGPT är AI:n. CodeBridge är den säkra
-bryggan till din Mac. Du behöver inte installera någonting – ingen Node.js,
-ingen Homebrew och ingen terminal. Allt ligger i appen.
+What is CodeBridge?
+CodeBridge is a Mac app that lets ChatGPT work with your code projects from a
+regular ChatGPT conversation. ChatGPT is the AI. CodeBridge is the secure
+bridge to your Mac. You do not need to install anything - no Node.js, no
+Homebrew and no terminal. Everything is bundled in the app.
 
-Du behöver bara:
-- en Mac med macOS 14 eller nyare (Intel eller Apple Silicon),
-- internet,
-- ett gratis ngrok-konto (för den säkra anslutningen),
-- en vanlig ChatGPT-prenumeration.
-
-------------------------------------------------------------------
-STEG 1 – Installera appen
-------------------------------------------------------------------
-1. Öppna DMG-filen (dubbelklicka på den).
-2. Dra CodeBridge.app till mappen Program (genvägen finns i DMG-fönstret).
-3. Öppna CodeBridge från mappen Program eller Launchpad.
-
-Om macOS säger "kan inte verifiera utvecklaren" eller blockerar öppningen:
-högerklicka på CodeBridge.app -> Öppna -> Öppna.
-(Detta gäller bara tills appen är signerad och notariserad; då försvinner
-steget helt.)
+All you need:
+- a Mac running macOS 14 or newer (Intel or Apple Silicon),
+- internet access,
+- a free ngrok account (for the secure connection),
+- a regular ChatGPT subscription.
 
 ------------------------------------------------------------------
-STEG 2 – Välj projektmappar
+STEP 1 - Install the app
 ------------------------------------------------------------------
-1. I appen klickar du på "Add folder" (eller "Browse" för att bläddra).
-2. Välj de projektmappar CodeBridge får arbeta med.
-3. Klicka Continue.
+1. Open the DMG file (double-click it).
+2. Drag CodeBridge.app into the Applications folder (the shortcut is right
+   there in the DMG window).
+3. Open CodeBridge from Applications or Launchpad.
 
-Bara de mappar du väljer kan nås av ChatGPT. Känsliga platser (SSH-nycklar,
-molnuppgifter, Keychain) är blockerade även om de efterfrågas.
-
-------------------------------------------------------------------
-STEG 3 – Säkra anslutningen (ngrok)
-------------------------------------------------------------------
-1. Skapa ett gratis konto på ngrok.com om du inte redan har ett.
-2. I appen: klicka "Open ngrok". Logga in och kopiera din anslutningskod
-   (authtoken) från ngrok-sidan.
-3. Klistra in koden i appen och klicka "Connect securely".
-
-Appen skapar nu en privat, säker internetadress till din Mac. Detta är bara
-transporten – det är inte OpenAI:s API och inte en AI-modell.
+If macOS says "cannot verify the developer" or blocks the app:
+right-click CodeBridge.app -> Open -> Open.
+(This only applies until the app is signed and notarized; then the step
+disappears completely.)
 
 ------------------------------------------------------------------
-STEG 4 – Koppla ChatGPT (Custom GPT)
+STEP 2 - Choose project folders
 ------------------------------------------------------------------
-Följ appens guide steg för steg. I korthet:
+1. In the app, click "Add folder" (or "Browse" to pick a folder).
+2. Select the project folders CodeBridge is allowed to work with.
+3. Click Continue.
 
-1. Klicka "Open GPT editor" i appen (chatgpt.com/gpts/editor).
-2. Klistra in Namn, Beskrivning och Instruktioner som appen visar.
-3. Under Features: aktivera "Code Interpreter & Data Analysis".
-4. Scrolla till Actions och klicka "Create new action".
-5. När du är inne på Action-sidan: gå tillbaka till CodeBridge och klicka
-   "I opened the Action page". Först nu visar appen Schema-steget.
-6. Kopiera Schema från appen och klistra in det i ChatGPT:s Schema-fält.
-7. Öppna Authentication (kugghjulet): välj API Key -> Bearer.
-8. Kopiera CodeBridge-hemligheten från appen och klistra in den i fältet
-   "API Key".
-   VIKTIGT: Detta är INTE en OpenAI API-nyckel. Det är din egen privata
-   CodeBridge-hemlighet. Dela den aldrig.
-9. Spara.
+Only the folders you choose can be reached by ChatGPT. Sensitive locations
+(SSH keys, cloud credentials, Keychain) are blocked even if requested.
 
 ------------------------------------------------------------------
-STEG 5 – Testa anslutningen
+STEP 3 - Secure connection (ngrok)
 ------------------------------------------------------------------
-1. I ChatGPT, fråga din GPT: "Check CodeBridge connection".
-2. När GPT svarar att CodeBridge är ansluten, klicka "Check connection"
-   i appen.
-3. Appen visar READY – först då är installationen klar.
+1. Create a free account at ngrok.com if you do not have one.
+2. In the app, click "Open ngrok". Sign in and copy your connection code
+   (authtoken) from the ngrok page.
+3. Paste the code into the app and click "Connect securely".
+
+The app now creates a private, secure internet address to your Mac. This is
+transport only - it is not the OpenAI API and not an AI model.
 
 ------------------------------------------------------------------
-STEG 6 – Börja använda
+STEP 4 - Connect ChatGPT (Custom GPT)
 ------------------------------------------------------------------
-Exempel på vad du kan fråga din GPT:
-- "Visa mina projekt"
-- "Öppna projektet och förklara strukturen"
-- "Hitta felet, fixa det och kör testerna"
-- "Visa vad som har ändrats i Git"
+Follow the in-app guide step by step. In short:
+
+1. Click "Open GPT editor" in the app (chatgpt.com/gpts/editor).
+2. Paste the Name, Description and Instructions shown in the app.
+3. Under Features: enable "Code Interpreter & Data Analysis".
+4. Scroll to Actions and click "Create new action".
+5. Once you are on the Action page: go back to CodeBridge and click
+   "I opened the Action page". Only now does the app show the Schema step.
+6. Copy the Schema from the app and paste it into ChatGPT's Schema field.
+7. Open Authentication (the gear icon): choose API Key -> Bearer.
+8. Copy the CodeBridge secret from the app and paste it into the "API Key"
+   field.
+   IMPORTANT: This is NOT an OpenAI API key. It is your own private
+   CodeBridge secret. Never share it.
+9. Save.
 
 ------------------------------------------------------------------
-Säkerhet
+STEP 5 - Test the connection
 ------------------------------------------------------------------
-- CodeBridge kan bara nå de mappar du valt.
-- Riskfyllda kommandon kräver ditt godkännande i appen (Allow once / Cancel).
-- Dina filer lämnar inte din Mac förrän du ber ChatGPT arbeta med dem.
-- Hemligheten i appen är privat. Klistra aldrig in en OpenAI API-nyckel.
+1. In ChatGPT, ask your GPT: "Check CodeBridge connection".
+2. When the GPT says CodeBridge is connected, click "Check connection" in the
+   app.
+3. The app shows READY - only then is the setup complete.
 
 ------------------------------------------------------------------
-Felsökning
+STEP 6 - Start using it
 ------------------------------------------------------------------
-- Appen startar inte: öppna från mappen Program, eller högerklick -> Öppna.
-- Ingen anslutning: datorn måste vara vaken och ha internet. Starta om
-  anslutningen i appen (steg 3).
-- GPT svarar inte på kommandon: kontrollera att Schema och Bearer-hemligheten
-  sparats i Action-inställningarna och att "Code Interpreter & Data Analysis"
-  är aktiverat.
-- Kontrollera att tjänsten är igång: öppna http://127.0.0.1:4317 i webbläsaren
-  – då visas CodeBridge-appen.
+Things you can ask your GPT:
+- "Show me my projects"
+- "Open this project and explain its structure"
+- "Find the bug, fix it and run the tests"
+- "Show me what changed in Git"
 
 ------------------------------------------------------------------
-ENGLISH (quick start)
+Security
 ------------------------------------------------------------------
-1. Open the DMG, drag CodeBridge.app to Applications and open it
-   (right-click -> Open if macOS asks).
-2. Add project folders in the app.
-3. Create a free ngrok account and paste your authtoken into the app.
-4. Follow the in-app ChatGPT guide: copy Name/Description/Instructions, enable
-   Code Interpreter & Data Analysis, create an Action, paste the Schema, set
-   Authentication to API Key + Bearer, and paste the CodeBridge secret (this is
-   NOT an OpenAI API key).
-5. Ask your GPT "Check CodeBridge connection", then click Check connection in
-   the app until it shows READY.
+- CodeBridge can only reach the folders you chose.
+- Risky commands require your approval in the app (Allow once / Cancel).
+- Your files never leave your Mac unless you ask ChatGPT to work with them.
+- The secret in the app is private. Never paste an OpenAI API key instead.
+
+------------------------------------------------------------------
+Troubleshooting
+------------------------------------------------------------------
+- The app does not start: open it from Applications, or right-click -> Open.
+- No connection: your Mac must be awake and online. Restart the connection in
+  the app (step 3).
+- The GPT does not answer commands: make sure the Schema and the Bearer secret
+  are saved in the Action settings and that "Code Interpreter & Data Analysis"
+  is enabled.
+- Check that the service is running: open http://127.0.0.1:4317 in a browser -
+  the CodeBridge app will be shown.
 
 No Node.js, Homebrew, Xcode or terminal is needed. Everything is bundled.
