@@ -17,9 +17,18 @@ enum LaunchAgent {
 
     /// Installs and loads the agent. Only meaningful for a real .app bundle: a
     /// development build lives at a path that would break the moment it moves.
+    /// A bundle running from a mounted volume — typically the DMG the user just
+    /// opened — is not somewhere to point a persistent agent. The volume gets
+    /// ejected and the job breaks, and until then the service keeps running from
+    /// the disk image and holds the port against the copy in Applications.
+    static var isOnRemovableVolume: Bool {
+        Bundle.main.bundleURL.resolvingSymlinksInPath().path.hasPrefix("/Volumes/")
+    }
+
     @discardableResult
     static func install(node: String, root: String, helper: String) -> Bool {
         guard Bundle.main.bundleURL.pathExtension == "app" else { return false }
+        guard !isOnRemovableVolume else { return false }
         guard FileManager.default.isExecutableFile(atPath: node) else { return false }
 
         let job: [String: Any] = [

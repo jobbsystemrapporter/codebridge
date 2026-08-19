@@ -23,6 +23,13 @@ struct ContentView: View {
                 VStack(spacing: 18) {
                     ProgressView().controlSize(.large)
                     Text("Starting CodeBridge…").font(.title2.weight(.semibold))
+                    if LaunchAgent.isOnRemovableVolume {
+                        Text("You are running CodeBridge from the disk image. Drag it to Applications and open it from there, or the connection will stop working when the image is ejected.")
+                            .font(.callout)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.orange)
+                            .frame(maxWidth: 420)
+                    }
                     Text(service.message).foregroundStyle(.secondary)
                     if service.failed { Button("Try again") { service.start() } }
                 }.padding(40)

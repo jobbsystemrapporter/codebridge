@@ -19,7 +19,8 @@ STEP 1 - Install the app
 1. Open the DMG file (double-click it).
 2. Drag CodeBridge.app into the Applications folder (the shortcut is right
    there in the DMG window).
-3. Open CodeBridge from Applications or Launchpad.
+3. Open CodeBridge from Applications or Launchpad - NOT from the disk image
+   window. An app run from the image stops working once it is ejected.
 
 CodeBridge is a standalone app that is not registered with Apple, so macOS
 will warn you the first time you open it. This is expected, and it is a

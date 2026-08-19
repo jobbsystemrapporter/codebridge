@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0-beta.4
+
+- Refuse to install the launch agent when the app runs from a mounted disk image, and say so on screen. Opening the app straight from the DMG pointed a persistent agent at `/Volumes`, and that service kept holding the port against the copy in Applications after the image was gone.
+
 ## 0.2.0-beta.3
 
 - Stop the repeating "keychain could not be found" panel. `security` speaks to the legacy macOS Keychain, which recent installs may not have; CodeBridge probed it on every connect and reconnect, so the panel returned each time. It now probes once and falls back silently to a 0600 file.

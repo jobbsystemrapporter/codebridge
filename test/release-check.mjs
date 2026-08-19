@@ -4,7 +4,7 @@ import { promisify } from 'node:util';
 
 const exec = promisify(execFile);
 const app = 'dist/CodeBridge.app';
-const dmg = 'dist/CodeBridge-0.2.0-beta.3.dmg';
+const dmg = 'dist/CodeBridge-0.2.0-beta.4.dmg';
 const checks = [];
 
 async function c(name, fn, required = true) {

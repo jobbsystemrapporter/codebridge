@@ -12,9 +12,10 @@ account. No Node.js, Homebrew, Xcode or Terminal — the app bundles what it use
 
 ## 1. Install the app
 
-1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.3/CodeBridge-0.2.0-beta.3.dmg) and open it.
+1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.4/CodeBridge-0.2.0-beta.4.dmg) and open it.
 2. Drag **CodeBridge.app** to the Applications shortcut in the DMG window.
-3. Open CodeBridge from Applications or Launchpad.
+3. Open CodeBridge **from Applications or Launchpad** — not from the disk image
+   window. An app run from the image stops working once the image is ejected.
 
 CodeBridge is a standalone app and is not registered with Apple, so macOS
 blocks the first launch. This is expected, and it happens once:
