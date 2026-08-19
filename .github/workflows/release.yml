@@ -18,5 +18,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: unsigned-codebridge-beta
-          path: dist/CodeBridge-0.2.0-beta.2.dmg
+          path: dist/CodeBridge-0.2.0-beta.3.dmg
           if-no-files-found: error

@@ -8,7 +8,7 @@ The localhost control API pins the Host header to the loopback address it listen
 
 The localhost control API uses a separate installation secret and origin checks. The public Custom GPT Action surface uses its own random per-install Bearer secret. The Action secret is a CodeBridge credential, not an OpenAI API key. Unauthenticated public Action requests are rejected.
 
-The normal product does not require an OpenAI API key, OpenAI Runtime API key, or OpenAI Secure MCP Tunnel. Public HTTPS transport credentials are transport-only credentials and must never be committed, logged, bundled into releases, or forwarded to project commands.
+The normal product does not require an OpenAI API key, OpenAI Runtime API key, or OpenAI Secure MCP Tunnel. Public HTTPS transport credentials are transport-only credentials and must never be committed, logged, bundled into releases, or forwarded to project commands. The transport credential is stored in the macOS Keychain when a login keychain exists. Recent macOS installs may have none — `security` speaks to the legacy keychain — and CodeBridge then stores it in `~/.codebridge/transport-secret` with mode 0600 instead of prompting. Moving this to the data protection keychain is open work.
 
 ## Transport isolation
 

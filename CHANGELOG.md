@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0-beta.3
+
+- Stop the repeating "keychain could not be found" panel. `security` speaks to the legacy macOS Keychain, which recent installs may not have; CodeBridge probed it on every connect and reconnect, so the panel returned each time. It now probes once and falls back silently to a 0600 file.
+
 ## 0.2.0-beta.2
 
 - Reserved ngrok domain support, so the public address survives restarts. Without one the address changed every time CodeBridge started and the custom GPT silently stopped reaching the Mac.

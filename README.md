@@ -11,9 +11,9 @@ CodeBridge is a small macOS app that gives a custom GPT safe, controlled access 
 
 The model is your existing ChatGPT plan. CodeBridge never asks for an OpenAI API key and adds no usage cost of its own.
 
-### [⬇ Download CodeBridge for macOS](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.2/CodeBridge-0.2.0-beta.2.dmg)
+### [⬇ Download CodeBridge for macOS](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.3/CodeBridge-0.2.0-beta.3.dmg)
 
-`v0.2.0-beta.2` · 91.0 MB · universal (Apple Silicon + Intel) · macOS 14 or newer · [how to install](#install)
+`v0.2.0-beta.3` · 90.4 MB · universal (Apple Silicon + Intel) · macOS 14 or newer · [how to install](#install)
 
 <img src="docs/screenshot.png" alt="CodeBridge after setup: the Ready screen, with example prompts and what ChatGPT is allowed to do" width="760">
 
@@ -44,7 +44,7 @@ You do **not** need Node.js, Homebrew, Xcode, an ngrok CLI, or Terminal. The app
 
 ## Install
 
-1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.2/CodeBridge-0.2.0-beta.2.dmg) and open it.
+1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.3/CodeBridge-0.2.0-beta.3.dmg) and open it.
 2. Drag **CodeBridge.app** to Applications.
 3. Open CodeBridge from Applications.
 
@@ -61,7 +61,7 @@ values to copy, plus troubleshooting.
 The app walks you through the same steps, one at a time:
 
 1. **Choose project folders.** Only these become reachable. Sensitive locations (SSH keys, cloud credentials, Keychains, Mail) are refused even if something asks for them.
-2. **Connect securely.** Paste your ngrok connection code and your free reserved domain. CodeBridge starts the HTTPS address itself and stores the code in your Keychain. The reserved domain is what keeps the address the same across restarts.
+2. **Connect securely.** Paste your ngrok connection code and your free reserved domain. CodeBridge starts the HTTPS address itself and stores the code in your Keychain, or in a private file under `~/.codebridge` if your Mac has no login keychain. The reserved domain is what keeps the address the same across restarts.
 3. **Create the custom GPT.** CodeBridge generates the GPT instructions, the Action schema and a private connection secret, and shows you exactly where each one goes in the ChatGPT editor.
 4. **Test the connection.** When a real authenticated call from ChatGPT reaches your Mac, and not before, the app says Ready.
 
@@ -127,6 +127,7 @@ Honest about where the beta stands:
 - The guide is **English only**. If your ChatGPT is set to another language, the control names you see will differ from the ones in the guide.
 - A **legacy free-form shell path** exists for development. It is disabled in Safe mode and should stay off for ordinary users.
 - Execution capabilities are signed and short-lived, but **replay within the capability's TTL is not yet rejected**.
+- The transport credential uses the **legacy macOS Keychain**, which recent installs may not have. CodeBridge then falls back to a 0600 file under `~/.codebridge` rather than prompting.
 
 ## Building from source
 

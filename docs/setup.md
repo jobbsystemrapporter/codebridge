@@ -12,7 +12,7 @@ account. No Node.js, Homebrew, Xcode or Terminal — the app bundles what it use
 
 ## 1. Install the app
 
-1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.2/CodeBridge-0.2.0-beta.2.dmg) and open it.
+1. [Download the DMG](https://github.com/jobbsystemrapporter/codebridge/releases/download/v0.2.0-beta.3/CodeBridge-0.2.0-beta.3.dmg) and open it.
 2. Drag **CodeBridge.app** to the Applications shortcut in the DMG window.
 3. Open CodeBridge from Applications or Launchpad.
 
@@ -60,7 +60,8 @@ forever.
 
 CodeBridge now has a private HTTPS address to your Mac. This is transport
 only: it is not an AI model and not the OpenAI API. Your connection code is
-stored in your Keychain.
+stored in your Keychain, or in a private file under `~/.codebridge` if your
+Mac has no login keychain.
 
 ## 4. Create the custom GPT
 
